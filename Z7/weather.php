@@ -26,7 +26,7 @@
             width: 500px;
             height: 40px;
             font-size: 1.5em;
-            color: #ffffee;
+            color: black;
             padding: 0;
 
         }
@@ -243,7 +243,7 @@ echo "<input type='hidden' id='adat' value='$ip' >";
             url: 'https://api.ipregistry.co/'+ NEV+'?key=mc6ccf5mrtiuu6',
             success: function (data2) {
 
-                console.log(data2)
+
                 var u='https://api.openweathermap.org/data/2.5/forecast?lat=';
                 var key ='&appid=4bd375ae392fd932766eeb5bd0b6633e';
                 var p='&lon=';

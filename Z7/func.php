@@ -55,7 +55,7 @@ $row2 = $stm->fetch(PDO::FETCH_ASSOC);
 
 if (empty($row2)){
     $sql = "INSERT INTO countries (name,capital,img,visited )
-         VALUES (?,?,?)";
+         VALUES (?,?,?,?)";
     $stm= $conn->prepare($sql);
     $stm->bindValue(1,$response->location->country->name);
 
@@ -63,7 +63,7 @@ if (empty($row2)){
     $co=strtolower($response->location->country->code);
     $img='http://www.geonames.org/flags/x/'.$co.'.gif';
     $stm->bindValue(3,$img);
-    $stm->bindValue(3,1);
+    $stm->bindValue(4,1);
     $stm->execute();
     $sql = "SELECT * FROM countries
         WHERE name=?  ";
@@ -93,7 +93,13 @@ if (empty($row99)){
     $stm->bindValue(4,$response->location->longitude);
     $stm->bindValue(5,$row2['id']);
     $stm->bindValue(6,1);
-    $stm->bindValue(7,$response->location->city);
+    if ($response->location->city==null){
+        $stm->bindValue(7,'Not Found');
+    }
+    else{
+        $stm->bindValue(7,$response->location->city);
+    }
+
     $stm->execute();
     $sql = "UPDATE countries SET visited=?
                 WHERE id=?";
