@@ -62,13 +62,14 @@ $sort = ($sort == 'ASC') ? 'DESC' : 'ASC';
     <div class="tbl-header">
         <table cellpadding="0" cellspacing="0" border="0">
             <thead>
+
             <tr>
-                <th onclick=" ">Name</th>
-                <th><a href="?order=surname&sort=<?php echo $sort; ?>">Surname</th>
-                <th><a href="?order=year&sort=<?php echo $sort; ?>">Year</th>
+                <th >Name</th>
+                <th><a href="?order=surname&sort=<?php echo $sort; ?>"> Surname </a></th>
+                <th><a href="?order=year&sort=<?php echo $sort; ?>"> Year </a></th>
                 <th>City</th>
                 <th>Country</th>
-                <th><a href="?order=type&sort=<?php echo $sort; ?>">Type</th>
+                <th><a href="?order=type&sort=<?php echo $sort; ?>"> Type </a></th>
                 <th>Discipline</th>
                 <th></th>
                 <th></th>
@@ -205,8 +206,9 @@ $sort = ($sort == 'ASC') ? 'DESC' : 'ASC';
     <a href='addp.php'><button class="btn draw-border" >ADD Person </button></a>
     <a href='addd.php'><button class="btn draw-border" >ADD Discipline </button></a>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="js.js"></script>
+
 </body>
 
 </html>

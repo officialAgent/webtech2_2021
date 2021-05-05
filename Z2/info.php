@@ -142,14 +142,11 @@ else{
     echo "<h1>No Person found</h1>";
 }
 ?>
-</tbody>
-</table>
-</div>
-</section>
+
 <div style="text-align:center;">
     <a href='index.php'><button class="btn draw-border" >Home</button></a>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js.js"></script>
 </body>
 

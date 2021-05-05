@@ -15,7 +15,6 @@
   This basically means: do what you want with it.
 */
 
-
 var stIsIE = /*@cc_on!@*/false;
 
 sorttable = {
