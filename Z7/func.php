@@ -71,6 +71,7 @@ if (empty($row2)){
     $stm->bindValue(1,$response->location->country->name);
     $stm->execute();
     $row9 = $stm->fetch(PDO::FETCH_ASSOC);
+    $row2=$row9;
 }
 
 
