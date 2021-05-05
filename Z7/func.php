@@ -63,7 +63,7 @@ if (empty($row2)){
     $co=strtolower($response->location->country->code);
     $img='http://www.geonames.org/flags/x/'.$co.'.gif';
     $stm->bindValue(3,$img);
-    $stm->bindValue(4,1);
+    $stm->bindValue(4,0);
     $stm->execute();
     $sql = "SELECT * FROM countries
         WHERE name=?  ";
