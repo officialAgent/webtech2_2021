@@ -17,6 +17,7 @@ include_once ('menu.php');
 ?>
 
 <?php
+
 include_once("config.php");
 include_once("func.php");
 
@@ -165,35 +166,16 @@ FROM countries   ";
             <tbody>
             <?php
 
-            $sql = "SELECT time FROM users ";
+            $sql = "SELECT * FROM  visit ";
             $stm = $conn->prepare($sql);
             $stm->execute();
-            $row99 = $stm->fetchAll(PDO::FETCH_ASSOC);
+            $row = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 
-            $first=0;
-            $second=0;
-            $third=0;
-            $fourth=0;
-            foreach ($row99 as $row) {
 
-                $dtime=$row['time'];
-                $dtime=substr($dtime, 11, -12);
 
-                if (intval($dtime)>=6 && intval($dtime)<=15){
-                    $first++;
-                }
-                elseif (intval($dtime)>=15 && intval($dtime)<=21){
-                    $second++;
-                }
-                elseif (intval($dtime)>=21 && intval($dtime)<=24){
-                    $third++;
-                }
-                elseif (intval($dtime)>=24 && intval($dtime)<=6){
-                    $fourth++;
-                }
 
-            }
+
 
                 ?>
 
@@ -201,21 +183,23 @@ FROM countries   ";
                 <tr>
 
                     <td><?php
-                        echo $first;
+
+                            echo $row[0]['value'];
+
                         ?></td>
 
                     <td><?php
-                        echo $second;
+                        echo $row[1]['value'];
                         ?></td>
 
                     <td><?php
-                        echo $third;
+                        echo $row[2]['value'];
                         ?></td>
                     <td><?php
-                        echo $fourth;
+                        echo $row[3]['value'];
                         ?></td>
                 </tr>
-            <?php  ?>
+            <?php     ?>
 
             </tbody>
         </table>

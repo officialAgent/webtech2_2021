@@ -5,7 +5,7 @@
       <paths name="webte2server">
         <serverdata>
           <mappings>
-            <mapping deploy="/Z7" local="$PROJECT_DIR$/Z7" web="/Z7" />
+            <mapping deploy="/final" local="$PROJECT_DIR$/final" web="/final" />
           </mappings>
         </serverdata>
       </paths>

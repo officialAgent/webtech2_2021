@@ -120,9 +120,6 @@ include_once ('menu.php');
 }
 */
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 
 
@@ -211,11 +208,14 @@ echo "<input type='hidden' id='adat' value='$ip' >";
             type: 'GET',
             url: 'https://api.opencagedata.com/geocode/v1/json?q='+data +'&key=f89957db0a0249c2ac11390928705102&language=en&pretty=1&no_annotations=1',
             success: function (data) {
-
+                var u='https://api.openweathermap.org/data/2.5/forecast?lat=';
+                var key ='&appid=4bd375ae392fd932766eeb5bd0b6633e';
+                var p='&lon=';
 
                 $.ajax({
                     type: 'GET',
-                    url: 'https://api.openweathermap.org/data/2.5/forecast?lat=47.8517086&lon=17.7325717&appid=4bd375ae392fd932766eeb5bd0b6633e',
+
+                    url: u + data.location.latitude  +p + data.location.longitude+ key,
                     success: function (data2) {
 
 

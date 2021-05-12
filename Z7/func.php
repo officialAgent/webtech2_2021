@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 include_once("config.php");
 
@@ -108,6 +105,69 @@ if (empty($row99)){
     $stm->bindValue(1,$row2['visited']+1);
     $stm->bindValue(2,$row2['id']);
     $stm->execute();
+
+
+    $sql = "SELECT time FROM users where ip=?";
+    $stm = $conn->prepare($sql);
+    $stm->bindValue(1,$ip);
+    $stm->execute();
+    $row99 = $stm->fetch(PDO::FETCH_ASSOC);
+
+    $first=0;
+    $second=0;
+    $third=0;
+    $fourth=0;
+
+    $dtime=$row99['time'];
+    $dtime=substr($dtime, 11, -12);
+    if (intval($dtime)>=6 && intval($dtime)<=15){
+        $first++;
+    }
+    elseif (intval($dtime)>=15 && intval($dtime)<=21){
+        $second++;
+    }
+    elseif (intval($dtime)>=21 && intval($dtime)<=24){
+        $third++;
+    }
+    elseif (intval($dtime)>=0 && intval($dtime)<=6){
+        $fourth++;
+    }
+
+    $sql = "SELECT * FROM  visit ";
+    $stm = $conn->prepare($sql);
+    $stm->execute();
+    $row98 = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+    $sql = "UPDATE visit SET value =?
+                WHERE name =?";
+    $stm = $conn->prepare($sql);
+    $stm->bindValue(1,intval($row98[0]['value'])+$first);
+    $stm->bindValue(2,'first');
+    $stm->execute();
+
+    $sql = "UPDATE visit SET value =?
+                WHERE name =?";
+    $stm = $conn->prepare($sql);
+    $stm->bindValue(1,intval($row98[1]['value'])+$second);
+    $stm->bindValue(2,'second');
+    $stm->execute();
+
+    $sql = "UPDATE visit SET value =?
+                WHERE name =?";
+    $stm = $conn->prepare($sql);
+    $stm->bindValue(1,intval($row98[2]['value'])+$third);
+    $stm->bindValue(2,'third');
+    $stm->execute();
+    $sql = "UPDATE visit SET value =?
+                WHERE name =?";
+    $stm = $conn->prepare($sql);
+    $stm->bindValue(1,intval($row98[3]['value'])+$fourth);
+    $stm->bindValue(2,'fourth');
+    $stm->execute();
+
+
 }
 else{
     $dtime=$row99['time'];
@@ -125,11 +185,12 @@ else{
    $interval=intval($interval->format('%a')) ;
 
    if ($interval >= 1){
-       $sql = "UPDATE users SET visited=?
+       $sql = "UPDATE users SET visited=?, time=?
                 WHERE id=?";
        $stm = $conn->prepare($sql);
        $stm->bindValue(1,$row99['visited']+1);
-       $stm->bindValue(2,$row99['id']);
+       $stm->bindValue(2,$response->time_zone->current_time);
+       $stm->bindValue(3,$row99['id']);
        $stm->execute();
 
        $sql = "UPDATE countries SET visited=?
@@ -138,6 +199,68 @@ else{
        $stm->bindValue(1,$row2['visited']+1);
        $stm->bindValue(2,$row2['id']);
        $stm->execute();
+
+
+       $sql = "SELECT time FROM users where id=?";
+       $stm = $conn->prepare($sql);
+       $stm->bindValue(1,$row2['id']);
+       $stm->execute();
+       $row99 = $stm->fetch(PDO::FETCH_ASSOC);
+
+       $first=0;
+       $second=0;
+       $third=0;
+       $fourth=0;
+
+       $dtime=$row99['time'];
+       $dtime=substr($dtime, 11, -12);
+       if (intval($dtime)>=6 && intval($dtime)<=15){
+           $first++;
+       }
+       elseif (intval($dtime)>=15 && intval($dtime)<=21){
+           $second++;
+       }
+       elseif (intval($dtime)>=21 && intval($dtime)<=24){
+           $third++;
+       }
+       elseif (intval($dtime)>=0 && intval($dtime)<=6){
+           $fourth++;
+       }
+
+       $sql = "SELECT * FROM  visit ";
+       $stm = $conn->prepare($sql);
+       $stm->execute();
+       $row98 = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+
+       $sql = "UPDATE visit SET value =?
+                WHERE name =?";
+       $stm = $conn->prepare($sql);
+       $stm->bindValue(1,intval($row98['first']['value'])+$first);
+       $stm->bindValue(2,'first');
+       $stm->execute();
+
+       $sql = "UPDATE visit SET value =?
+                WHERE name =?";
+       $stm = $conn->prepare($sql);
+       $stm->bindValue(1,intval($row98['second']['value'])+$second);
+       $stm->bindValue(2,'second');
+       $stm->execute();
+
+       $sql = "UPDATE visit SET value =?
+                WHERE name =?";
+       $stm = $conn->prepare($sql);
+       $stm->bindValue(1,intval($row98['third']['value'])+$third);
+       $stm->bindValue(2,'third');
+       $stm->execute();
+       $sql = "UPDATE visit SET value =?
+                WHERE name =?";
+       $stm = $conn->prepare($sql);
+       $stm->bindValue(1,intval($row98['fourth']['value'])+$fourth);
+       $stm->bindValue(2,'fourth');
+       $stm->execute();
+
+
     }
 
 
