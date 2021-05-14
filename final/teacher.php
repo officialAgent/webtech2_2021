@@ -157,7 +157,7 @@ background-size: contain"></div>
                                             $stm->bindValue(1,$_COOKIE["id"]);
                                             $stm->execute();
                                             $rows2 = $stm->fetchAll(PDO::FETCH_ASSOC);
-                                            foreach ($rows2 as $row) {
+                                            foreach ($rows2 as $key=> $row) {
 
                                                 ?>
 
@@ -166,30 +166,18 @@ background-size: contain"></div>
 
                                                     <td><?php echo $row["code"] ?></td>
                                                     <td>
-                                                    <a href=''>Details</a>
+                                                    <a href='functions/details.php'>Details</a>
                                                     </td>
                                                     <td>
 
                                                         <label class="switch">
-                                                            <input  type="checkbox" >
+                                                            <input id="<?php echo $key?>" onchange="logStatus(this.id,<?php echo $row["code"] ?>)"  type="checkbox" >
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
-                                            <tr>
 
-                                                <td>88888</td>
-                                                <td>
-                                                    <a href=''>Details</a>
-                                                </td>
-                                                <td>
-                                                    <label class="switch">
-                                                        <input type="checkbox" >
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </td>
-                                            </tr>
 
                                             </tbody>
                                         </table>
@@ -414,6 +402,16 @@ background-size: contain" class="footer text-center ">
 <script src="js/student.js"></script>
 
 <script>
+
+    function logStatus(n, text){
+        // if(document.querySelectorAll('.status_check')[n].checked === true ){
+        if(document.getElementById(n).checked){
+            console.log('STATUS ACTIVE', n, text);
+        }else {
+            console.log('STATUS NOT ACTIVE', n, text);
+        }
+    }
+
     $(document).ready(function() {
         $("#save").click(function () {
             var code=document.getElementById('code').innerHTML;
@@ -426,7 +424,8 @@ background-size: contain" class="footer text-center ">
                 "time":time,
                 "tID": "1"},
                 success: function(data){
-                    location.reload();
+                    /*location.reload();*/
+                    alert(data);
                 }
             });
         });
@@ -678,6 +677,8 @@ background-size: contain" class="footer text-center ">
 
 
             var h2 = document.createElement("p");
+            var div2 = document.createElement("div");
+            div2.className = "col-md-6";
             var q=document.getElementById("q3q").value;
             var inputs, index,data1,data2;
             inputs = document.getElementById('testshow2').getElementsByTagName('input');
@@ -712,8 +713,6 @@ background-size: contain" class="footer text-center ">
             var div = document.createElement("div");
             div.className = "col-md-6"; // set the CSS class
 
-            var div2 = document.createElement("div");
-            div2.className = "col-md-6"; // set the CSS class
 
 
             var h = document.createElement("p");

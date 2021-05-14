@@ -20,18 +20,20 @@ try {
 
 
 if(isset($_POST['data']) ){
+    $data = json_decode($_POST['data'],true);
+    var_dump($data);
     //$_POST['data'] contain the value that you sent via ajax
     //Do something
 
-    $data = json_decode($_POST['data'],true);
 
 
 
 
-var_dump($data);
 
 
-    $in=0;
+
+
+    $in=1;
    foreach ($data as  $d ){
      $type= $d['type'];
 
@@ -52,15 +54,15 @@ var_dump($data);
 
        $sql = "INSERT INTO question (testID,questionPosition,questionType,question,point) 
          VALUES (?,?,?,?,?)";
-       $stm= $conn->prepare($sql);
-       $stm->bindValue(1,intval($testID));
-       $stm->bindValue(2,$in);
+       $stm1= $conn->prepare($sql);
+       $stm1->bindValue(1,intval($testID));
+       $stm1->bindValue(2,$in);
        $in++;
-       $stm->bindValue(3,$type);
-       $stm->bindValue(4,$d["question"]);
-       $stm->bindValue(5,$d['point']);
+       $stm1->bindValue(3,$type);
+       $stm1->bindValue(4,$d["question"]);
+       $stm1->bindValue(5,$d['point']);
 
-       $stm->execute();
+       $stm1->execute();
        $qID=$conn->lastInsertId();
 
     if ($type == 'text'){
@@ -71,14 +73,39 @@ var_dump($data);
 
         $sql = "INSERT INTO text (questionID,answer) 
          VALUES (?,?)";
-        $stm= $conn->prepare($sql);
-        $stm->bindValue(1,$qID);
-        $stm->bindValue(2,$d['ans']);
+        $stm2= $conn->prepare($sql);
+        $stm2->bindValue(1,$qID);
+        $stm2->bindValue(2,$d['ans']);
 
 
-        $stm->execute();
+        $stm2->execute();
 
     }
+    elseif ($type == 'check'){
+        $questionData = $d["q2dat"];
+
+        foreach ($questionData as $qdata){
+            $stm3 = $conn->prepare("INSERT INTO checkbox (questionID, checked, answer) VALUES (?,?,?)");
+            $stm3->bindValue(1, $qID);
+            $converted_res = $qdata["checked"]? 'true' : 'false';
+            $stm3->bindValue(2, $converted_res);
+            $stm3->bindValue(3, $qdata["ans"]);
+            $stm3->execute();
+        }
+    }
+    elseif ($type == 'drag'){
+        $questionData = $d["q3dat"];
+
+        foreach ($questionData as $qdata){
+            $stm4 = $conn->prepare("INSERT INTO drag (questionID, data1, data2) VALUES (?,?,?)");
+            $stm4->bindValue(1, $qID);
+            $stm4->bindValue(2, $qdata["data1"]);
+            $stm4->bindValue(3, $qdata["data2"]);
+            $stm4->execute();
+        }
+    }
+
+
    }
 
 

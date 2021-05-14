@@ -26,17 +26,17 @@ error_reporting(E_ALL);
 
 <?php
 
-                            include_once("config.php");
+include_once("config.php");
 
-                            try {
+try {
 
-                                $conn = new PDO("mysql:host=$servername;dbname=final", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=final", $username, $password);
 
-                                /* $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ATTR_ERRMODE_EXEPTION);*/
+    /* $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ATTR_ERRMODE_EXEPTION);*/
 
-                            } catch (PDOException $e) {
-                                echo "failed connection" . $e->getMessage();
-                            }
+} catch (PDOException $e) {
+    echo "failed connection" . $e->getMessage();
+}
 
 
 if (isset($_GET['examID']) && !empty($_GET['examID'])){
@@ -131,13 +131,13 @@ background-size: contain"></div>
                             <li class="nav-item">
                                 <a class="nav-link active" href="#studio" role="tab" data-toggle="tab">
                                     <i class="material-icons">language</i>
-                                    Join to exam
+                                    Students on exam
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#works" role="tab" data-toggle="tab">
                                     <i class="material-icons">quiz</i>
-                                    My Exams
+                                   Anti cheat
                                 </a>
                             </li>
 
@@ -151,24 +151,9 @@ background-size: contain"></div>
             <div class="tab-content tab-space">
                 <div class="tab-pane active text-center gallery" id="studio">
                     <div class="row  justify-content-center">
-                        <div class="form__group field">
+                        <div id="sttest" class="form__group field">
 
-                            <form method="get" action="">
-                            <input type="input" class="form__field" placeholder="Name" name="examID" id='examID' required />
-                            <label for="name" class="form__label">
-                                <?php
 
-                                if (isset($codeERROR)){
-                                    echo $codeERROR;
-                                }
-                                else{
-                                    echo "Exam Code:";
-                                }
-                                ?>
-
-                                </label>
-                            <button type="submit" class="btn btn-warning" >Join</button>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -193,11 +178,32 @@ background-size: contain"></div>
 background-size: contain" class="footer text-center ">
 </footer>
 
+
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
 <script src="js/student.js"></script>
+<script>
+    $.ajax({
+        type: 'GET',
+        url: 'http://147.175.98.97/final/functions/getstudentinfo.php',
+        success: function (data) {
+
+            var responsedata = $.parseJSON(data);
+            $("#myDiv").html('');
+            var hossz2=responsedata.hossz;
+            for (i=parseInt(hossz2) ; i!==0; i--){
+                console.log(i);
+
+                $("#myDiv").append( 'Holiday: '+responsedata[i-1].unnep + '    &nbsp &nbsp &nbsp   day:  '+ responsedata[i-1].nap+ ' &nbsp &nbsp &nbsp  Month:  ' + responsedata[i-1].honap+'<br>')   ;
+
+
+            }
+
+        }
+    });
+</script>
 
 
 
