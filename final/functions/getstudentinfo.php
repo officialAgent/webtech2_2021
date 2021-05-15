@@ -22,7 +22,7 @@ $kons=0;
 foreach ($rows as $row) {
 
     $sql2 ="SELECT fname,lname FROM users
-            WHERE id = ?";
+            WHERE secret = ?";
     $stm2 = $conn->prepare($sql2);
     $stm2->bindValue(1,$row['studentID']);
     $stm2->execute();

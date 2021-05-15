@@ -87,7 +87,7 @@ background-size: contain"></div>
                             } catch (PDOException $e) {
                                 echo "failed connection" . $e->getMessage();
                             }
-                            $sql = "SELECT * from users    WHERE id= ?  ";
+                            $sql = "SELECT * from users    WHERE secret= ?  ";
 
                             $stm = $conn->prepare($sql);
 
@@ -118,7 +118,7 @@ background-size: contain"></div>
 
                         <div class="container"> <div class=" text-center mt-5 ">
                                 <h1>Test </h1>
-                                <h1 id="demo"></h1>
+                                <div id="demo"></div>
 
                                 <h1 id="code"> </h1>
                             </div>
@@ -379,7 +379,7 @@ background-size: contain" class="footer text-center ">
 
 <?php
 date_default_timezone_set('Europe/Vienna');
-$minfortest=1;
+$minfortest=2;
 
 //$currentime=date('h:i:s a');
 
@@ -432,9 +432,8 @@ $ora=$datatime['h'];
 $perc=$datatime['m'];
 $masodperc=$datatime['s'];
 ?>
-
-
 <script>
+
     var countDownDate = <?php
     echo strtotime("$date $ora:$perc:$masodperc" ) ?> * 1000;
     var now = <?php echo time() ?> * 1000;
@@ -452,27 +451,16 @@ $masodperc=$datatime['s'];
 // Output the result in an element with id="demo"
         document.getElementById("demo").innerHTML =  hours + "h " +
             minutes + "m " + seconds + "s ";
+
 // If the count down is over, write some text
         if (distance < 0) {
             clearInterval(x);
             document.getElementById("demo").innerHTML = "EXPIRED";
-            <?php
+            $.ajax({
+                type: 'GET',
+                url: 'http://147.175.98.97/final/functions/mangetesttime.php',
 
-            $sql = "UPDATE studentTest set status='finsihed' where studentID=? and testID=?";
-            $stm= $conn->prepare($sql);
-            $stm->bindValue(1,$_COOKIE["id"]);
-            $stm->bindValue(2,$_COOKIE["tcode"]);
-            $stm->execute();
-
-
-            $sql = "DELETE from timer  where studentID=? and testID=?";
-            $stm= $conn->prepare($sql);
-            $stm->bindValue(1,$_COOKIE["id"]);
-            $stm->bindValue(2,$_COOKIE["tcode"]);
-            $stm->execute();
-
-
-            ?>
+            });
 
         }
 
@@ -480,6 +468,25 @@ $masodperc=$datatime['s'];
 
 
 </script>
+
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+
+
+</script>
+
 
 
 <script>
@@ -644,23 +651,6 @@ $masodperc=$datatime['s'];
             }
         });
     }
-</script>
-<script>
-    function allowDrop(ev) {
-        ev.preventDefault();
-    }
-
-    function drag(ev) {
-        ev.dataTransfer.setData("text", ev.target.id);
-    }
-
-    function drop(ev) {
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
-        ev.target.appendChild(document.getElementById(data));
-    }
-
-
 </script>
 </body>
 

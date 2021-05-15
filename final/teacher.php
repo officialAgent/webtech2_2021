@@ -84,7 +84,7 @@ background-size: contain"></div>
                             } catch (PDOException $e) {
                                 echo "failed connection" . $e->getMessage();
                             }
-                            $sql = "SELECT * from users    WHERE id= ?  ";
+                            $sql = "SELECT * from users    WHERE secret= ?  ";
 
                             $stm = $conn->prepare($sql);
 
@@ -412,6 +412,25 @@ background-size: contain" class="footer text-center ">
         }
     }
 
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+
+
+
     $(document).ready(function() {
         $("#save").click(function () {
             var code=document.getElementById('code').innerHTML;
@@ -422,7 +441,7 @@ background-size: contain" class="footer text-center ">
                 data: {"data":JSON.stringify(qs),
                 "code":code,
                 "time":time,
-                "tID": "1"},
+                "tID": getCookie("id")},
                 success: function(data){
                     location.reload();
 

@@ -52,8 +52,8 @@ if (isset($_POST['fname']) && !empty($_POST['fname']) )
     if (isset($_POST['uid']) && !empty($_POST['uid']) && isset($_POST['password']) && !empty($_POST['password']) && isset($_POST['email']) && !empty($_POST['email'])&& isset($_POST['lname']) && !empty($_POST['lname']) && isset($_POST['role']) && !empty($_POST['role']) ){
 
 
-        $sql = "INSERT INTO users  (email,password,fname,lname,uid,role)
-         VALUES (?,?,?,?,?,?)";
+        $sql = "INSERT INTO users  (email,password,fname,lname,uid,role,secret)
+         VALUES (?,?,?,?,?,?,?)";
         $stm= $conn->prepare($sql);
         $stm->bindValue(1,$_POST["email"]);
         $passHash = password_hash($_POST["password"],PASSWORD_DEFAULT);
@@ -62,7 +62,7 @@ if (isset($_POST['fname']) && !empty($_POST['fname']) )
         $stm->bindValue(4,$_POST["lname"]);
         $stm->bindValue(5,$_POST["uid"]);
         $stm->bindValue(6,$_POST["role"]);
-
+        $stm->bindValue(7,"none");
 
         $sql2 ="SELECT id FROM users
         WHERE uid = ? && lname=?";
@@ -78,6 +78,13 @@ if (isset($_POST['fname']) && !empty($_POST['fname']) )
         else{
 
             $stm->execute();
+            $secret=$conn->lastInsertId();
+            $sql = "UPDATE users set secret=? where id=?";
+            $stm = $conn->prepare($sql);
+            $stm->bindValue(1, hash('ripemd160',$secret ));
+            $stm->bindValue(2, $secret);
+            $stm->execute();
+
             unset($error);
 
         }

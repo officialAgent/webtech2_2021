@@ -23,7 +23,7 @@ if (isset($_GET['logemail']) && !empty($_GET['logemail']) && isset($_GET['logpas
 {
 
 
-        $sql2 ="SELECT id, password, role FROM users
+        $sql2 ="SELECT id, password, secret, role FROM users
         WHERE email=?";
         $stm2 = $conn->prepare($sql2);
         $stm2->bindValue(1,$_GET['logemail']);
@@ -32,7 +32,7 @@ if (isset($_GET['logemail']) && !empty($_GET['logemail']) && isset($_GET['logpas
         $rows = $stm2->fetch(PDO::FETCH_ASSOC);
         if (!empty($rows["id"] && password_verify($_GET["logpassword"],$rows["password"]))){
             unset($error2);
-            setcookie('id', $rows['id'], time() + (86400 * 30), "/"); // 86400 = 1 day
+            setcookie('id', $rows['secret'], time() + (86400 * 30), "/"); // 86400 = 1 day
 
             if (intval($rows['role'])==1){
                 header("location: student.php");
