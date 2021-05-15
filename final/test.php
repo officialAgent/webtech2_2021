@@ -244,11 +244,32 @@ background-size: contain"></div>
                                                                                     <div class="row">
                                                                                         <div class="col-md-12">
                                                                                             <div class="form-group"> <h3><?php echo $row['questionPosition']  ?></h3> <p style="color: #ffffee"><?php echo $row['question']  ?> </p> </div>
+                                                                                            <p>Mobile Photo</p>
+                                                                                            <label class="switch">
+                                                                                                <input id="<?php echo $row['questionPosition']?>" onchange="logStatus(this.id)"  type="checkbox" >
+                                                                                                <span class="slider round"></span>
+                                                                                            </label>
+                                                                                            <div id="rajz">
                                                                                             <canvas id="canvas" width="500" height="250" style="display: block;">
                                                                                                 Sorry, your browser is rubbish.
                                                                                             </canvas>
-                                                                                        </div>
-                                                                                        <div class="col-md-12"> <input type="button" id="saveC" class="btn btn-success btn-send pt-2 btn-block " value="Save picture"> </div>
+                                                                                            <div class="col-md-12"> <input type="button" id="saveC" class="btn btn-success btn-send pt-2 btn-block " value="Save picture"> </div>
+                                                                                            </div>
+                                                                                            <div id="qrcode">
+                                                                                                <?php
+include('qrcode/qrlib.php');
+
+$test=$_COOKIE['tcode'];
+$id=$_COOKIE['id'];
+
+
+$link="http://147.175.98.97/final/upload/upsite.php?testid=".$test."&"."id=".$id;
+// outputs image directly into browser, as PNG stream
+QRcode::png($link);
+?>
+                                                                                            </div>
+                                                                                            </div>
+
 
                                                                                     </div>
                                                                                     <?php
@@ -433,6 +454,20 @@ $perc=$datatime['m'];
 $masodperc=$datatime['s'];
 ?>
 <script>
+
+    function logStatus(n){
+        if(document.getElementById(n).checked){
+
+            document.getElementById('rajz').style.display='none'
+            document.getElementById('qrcode').style.display='block';
+
+        }
+        else {
+
+            document.getElementById('rajz').style.display='block';
+            document.getElementById('qrcode').style.display='none'
+        }
+    }
 
     var countDownDate = <?php
     echo strtotime("$date $ora:$perc:$masodperc" ) ?> * 1000;

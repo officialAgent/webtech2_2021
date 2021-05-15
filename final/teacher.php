@@ -244,7 +244,7 @@ $code= rand(pow(10, $digits-1), pow(10, $digits)-1);
                                                                     <option value="q2">q2</option>
                                                                     <option value="q3">q3</option>
                                                                     <option value="2">q4</option>
-                                                                    <option value="2">q5</option>
+
                                                                 </select> </div>
                                                         </div>
 
