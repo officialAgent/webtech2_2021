@@ -2,9 +2,9 @@
 
 
 <?php
-ini_set('display_errors', 1);
+/*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL);*/
 
 ?>
 
@@ -257,15 +257,20 @@ background-size: contain"></div>
                                                                                             </div>
                                                                                             <div id="qrcode">
                                                                                                 <?php
-include('qrcode/qrlib.php');
+                                                                                                include('qrcode/qrlib.php');
+
+                                                                                                // SVG file format support
+
+
 
 $test=$_COOKIE['tcode'];
 $id=$_COOKIE['id'];
 
 
 $link="http://147.175.98.97/final/upload/upsite.php?testid=".$test."&"."id=".$id;
-// outputs image directly into browser, as PNG stream
-QRcode::png($link);
+                                                                                                $svgCode = QRcode::svg($link);
+
+                                                                                                echo $svgCode;
 ?>
                                                                                             </div>
                                                                                             </div>
@@ -454,6 +459,7 @@ $perc=$datatime['m'];
 $masodperc=$datatime['s'];
 ?>
 <script>
+
 
     function logStatus(n){
         if(document.getElementById(n).checked){
