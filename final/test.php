@@ -94,6 +94,7 @@ background-size: contain"></div>
                             $stm->bindValue(1,$_COOKIE["id"]);
                             $stm->execute();
                             $row = $stm->fetch(PDO::FETCH_ASSOC);
+
                             ?>
                             <h3 class="title"><?php echo $row["fname"];echo "&nbsp  ";echo $row["lname"]    ?></h3>
                             <h6>Teacher</h6>
@@ -117,6 +118,7 @@ background-size: contain"></div>
 
                         <div class="container"> <div class=" text-center mt-5 ">
                                 <h1>Test </h1>
+                                <h1 id="demo"></h1>
 
                                 <h1 id="code"> </h1>
                             </div>
@@ -132,6 +134,7 @@ background-size: contain"></div>
                                                         <?php
 
                                                         $alldrag=0;
+                                                        $alldrag2=0;
                                                         $sql = "SELECT * FROM test JOIN question ON test.id = question.testID where code=?";
 
                                                         $stm = $conn->prepare($sql);
@@ -177,10 +180,13 @@ background-size: contain"></div>
                                                                 <div class="form-group"> <h3><?php echo $row['questionPosition']  ?></h3> <p style="color: #ffffee"><?php echo $row['question']  ?> </p> </div>
                                                         <?php
                                                                 foreach ($rows4 as $chbox){
+                                                                    $new_str = str_replace(' ', '', $chbox['answer']);
+
                                                                 ?>
 
-                                                                        <input type="hidden"  id=<?php echo $chbox['answer']?> name=<?php echo $chbox['answer']?> value="0">
-                                                                        <div class="checkbox-inline"><label class="checkbox-inline"><input value="1"  name=<?php echo $chbox['answer']?>  type="checkbox"><span class="checkbox-decorator"><span class="check"></span></span><div class="form-group"><input type="text" class="form-control" disabled placeholder=<?php echo $chbox['answer']?>></div></label></div>
+
+                                                                        <input type="hidden"  id=<?php echo $chbox['answer']?> name="<?php echo $new_str ?>" value="0">
+                                                                        <div class="checkbox-inline"><label class="checkbox-inline"><input value="1"  name="<?php echo $new_str?>"  type="checkbox"><span class="checkbox-decorator"><span class="check"></span></span><div class="form-group"><input type="text" class="form-control" disabled placeholder="<?php echo $chbox['answer']?>"></div></label></div>
 
 
                                                                 <?php
@@ -205,21 +211,24 @@ background-size: contain"></div>
                                                                             foreach ($rows5 as $dcount=> $dbox){
                                                                                 ?>
 
-                                                                                <div class="data1" ondrop="drop(event)" ondragover="allowDrop(event)" id="question.<?php echo $dcount ?>"><?php echo $dbox['data1'] ?></div>
+                                                                                <div class="data1" ondrop="drop(event)" ondragover="allowDrop(event)" id="question.<?php echo $alldrag ?>"><?php echo $dbox['data1'] ?></div>
 
                                                                                 <?php
+                                                                                $alldrag++;
                                                                             }
-                                                                            $alldrag=$alldrag+$dcount;
+
                                                                             ?>
                                                                                 <div id="br"></div>
                                                                                 <div id="answer" ondrop="drop(event)" ondragover="allowDrop(event)">
                                                                                 <?php
+
                                                                             foreach ($rows5 as $dcount=> $dbox){
                                                                                 ?>
 
-                                                                                <p style="color: orangered" class="dragNdrop data2" draggable="true" ondragstart="drag(event)" id="ans.<?php echo $dcount ?>"  ><?php echo $dbox['data2'] ?></p>
+                                                                                <p style="color: orangered" class="dragNdrop data2" draggable="true" ondragstart="drag(event)" id="ans.<?php echo $alldrag2 ?>"  ><?php echo $dbox['data2'] ?></p>
 
                                                                                 <?php
+                                                                                $alldrag2++;
                                                                             }
 
                                                                             ?>
@@ -249,7 +258,7 @@ background-size: contain"></div>
                                                         }
 
                                                                                 ?></div>
-                                                                                <input type="hidden" name="dcount" id="dcount" value=<?php echo $alldrag+1?>>
+                                                                                <input type="hidden" name="dcount" id="dcount" value=<?php echo $alldrag?>>
                                                                             </div>
                                                                 </div>
                                                                 </div>
@@ -305,14 +314,17 @@ background-size: contain"></div>
 
                                 foreach ($rows4 as $chbox){
 
+                                    $new_str = str_replace(' ', '', $chbox['answer']);
 
 
-                                    if ($_GET[$chbox['answer']]=="1"){
+                                    if ($_GET[$new_str]=="1"){
                                         $t="true";
                                     }
                                     else{
                                         $t="false";
                                     }
+
+
 
                                     if ($chbox["checked"]==$t){
                                         $allPoint++;
@@ -328,6 +340,7 @@ background-size: contain"></div>
 
                         }
                         $allPoint=$allPoint+$_GET['dcount'];
+                        var_dump($_GET);
                         var_dump($allPoint);
     }
                         ?>
@@ -345,6 +358,15 @@ background-size: contain"></div>
 </div>
 
 
+<div id="cheater"></div>
+
+
+
+
+
+
+
+
 
 
 <footer style="    font-family: 'Lato', sans-serif;
@@ -354,6 +376,111 @@ background-size: contain"></div>
     background: linear-gradient(to right, #272838, #2b2d41, #393549, #433545);
 background-size: contain" class="footer text-center ">
 </footer>
+
+<?php
+date_default_timezone_set('Europe/Vienna');
+$minfortest=1;
+
+//$currentime=date('h:i:s a');
+
+$currentdate=date('Y-m-d');
+$currenth= date('H', time());
+$currentm= date('i', time());
+$currentsec= date('s', time());
+
+$inth= date('H', time()+$minfortest*60);
+$intm= date('i', time()+$minfortest*60);
+$intsec= date('s', time()+$minfortest*60);
+$date=date('Y-m-d',time()+$minfortest*60);
+
+$timestamp=date('Y-m-d H:i:s',time()+$minfortest*60);
+
+
+
+
+function valami($conn)
+{
+
+
+
+$sql = "SELECT * FROM timer WHERE student_id=? and test_id=?";
+$stm = $conn->prepare($sql);
+$stm->bindValue(1,intval($_COOKIE['id']) );
+$stm->bindValue(2,intval($_COOKIE['tcode']));
+$stm->execute();
+$temp=$stm->fetch();
+return $temp;
+}
+//var_dump(valami($conn));
+$datatime=valami($conn);
+if(empty($datatime))
+{
+$sql = "INSERT INTO timer (date,h,m,s,student_id,test_id,fulltime ) VALUES (?,?,?,?,?,?,?)";
+$stm = $conn->prepare($sql);
+$stm->bindValue(1, $date);
+$stm->bindValue(2, $inth);
+$stm->bindValue(3, $intm);
+$stm->bindValue(4, $intsec);
+$stm->bindValue(5,intval($_COOKIE['id']) );
+$stm->bindValue(6,intval($_COOKIE['tcode']));
+$stm->bindValue(7,$timestamp);
+$stm->execute();
+
+$datatime=valami($conn);
+}
+$ora=$datatime['h'];
+$perc=$datatime['m'];
+$masodperc=$datatime['s'];
+?>
+
+
+<script>
+    var countDownDate = <?php
+    echo strtotime("$date $ora:$perc:$masodperc" ) ?> * 1000;
+    var now = <?php echo time() ?> * 1000;
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+        now = now + 1000;
+// Find the distance between now an the count down date
+        var distance = countDownDate - now;
+// Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+// Output the result in an element with id="demo"
+        document.getElementById("demo").innerHTML =  hours + "h " +
+            minutes + "m " + seconds + "s ";
+// If the count down is over, write some text
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXPIRED";
+            <?php
+
+            $sql = "UPDATE studentTest set status='finsihed' where studentID=? and testID=?";
+            $stm= $conn->prepare($sql);
+            $stm->bindValue(1,$_COOKIE["id"]);
+            $stm->bindValue(2,$_COOKIE["tcode"]);
+            $stm->execute();
+
+
+            $sql = "DELETE from timer  where studentID=? and testID=?";
+            $stm= $conn->prepare($sql);
+            $stm->bindValue(1,$_COOKIE["id"]);
+            $stm->bindValue(2,$_COOKIE["tcode"]);
+            $stm->execute();
+
+
+            ?>
+
+        }
+
+    }, 1000);
+
+
+</script>
+
 
 <script>
 
@@ -367,11 +494,12 @@ background-size: contain" class="footer text-center ">
         var d=document.getElementById("dcount").value;
 
         let countCorrect = 0;
-
+        alert(d);
      for (var i=0;i<d;i++){
          if(document.getElementById('question.'+ i).firstElementChild === document.getElementById('ans.'+ i)){
              countCorrect++;
          }
+         alert(countCorrect);
      }
 
         document.getElementById("dcount").value=countCorrect;
@@ -435,12 +563,88 @@ background-size: contain" class="footer text-center ">
 
 
 </script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
 <script src="js/student.js"></script>
+
+<script>
+    var error;
+    let canvas2 = document.createElement('canvas');
+    let gl = canvas2.getContext('webgl');
+
+    let debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+    let vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+    let renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL).toString();
+
+    if (vendor.includes("VM") || renderer.includes("VM")) {
+        error="This Student is using a Virtual Box";
+        sendcheat(error);
+    }
+
+    const deviceType = () => {
+        const ua = navigator.userAgent;
+        if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+            return "tablet";
+        } else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+            return "mobile";
+        }
+        return "desktop";
+    };
+
+    const onVisibilityChange = () => {
+        if (document.hidden) {
+            console.log("Student Left the Tab");
+            error="Student Left the Tab";
+            sendcheat(error);
+
+        }
+    }
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+
+    window.onfocus = function () {
+        console.log('Student returned from another Window or Tab');
+        error="Student returned from another Window or Tab";
+        sendcheat(error);
+
+    }
+    // Check if student used the Keyboard Combination CTRL + C / CTRL + V
+    document.addEventListener('keyup', function (event) {
+        event.preventDefault();
+        if ((event.ctrlKey && event.key === 'c') || (event.ctrlKey && event.key === 'v')) {
+            console.log("Student tried Copy/Paste");
+            error="Student tried Copy/Paste";
+            sendcheat(error);
+        }
+    });
+
+    if (deviceType() === "mobile") {
+        alert("mobile device not supported");
+        document.addEventListener("blur", function (event) {
+            alert("The document doesn't have the focus.");
+            error="The document doesn't have the focus.";
+            sendcheat(error);
+        });
+    }
+
+    function sendcheat(error){
+        $.ajax({
+            type: 'POST',
+            url: 'http://147.175.98.97/final/functions/savecheat.php',
+            data: {"data": error,
+               },
+            success: function(data){
+
+
+            }
+        });
+    }
+</script>
 <script>
     function allowDrop(ev) {
         ev.preventDefault();

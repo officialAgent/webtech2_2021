@@ -34,23 +34,24 @@ if(isset($_POST['data']) ){
 
 
     $in=1;
+
+    $sql = "INSERT INTO test (code,teacherID,time,status) 
+         VALUES (?,?,?,?)";
+    $stm= $conn->prepare($sql);
+    $stm->bindValue(1,$_POST["code"]);
+    $stm->bindValue(2,$_POST["tID"]);
+    $stm->bindValue(3,intval($_POST["time"]));
+    $stm->bindValue(4,"false");
+
+    $stm->execute();
+
+
+    $testID=$conn->lastInsertId();
    foreach ($data as  $d ){
      $type= $d['type'];
 
 
 
-       $sql = "INSERT INTO test (code,teacherID,time,status) 
-         VALUES (?,?,?,?)";
-       $stm= $conn->prepare($sql);
-       $stm->bindValue(1,$_POST["code"]);
-       $stm->bindValue(2,$_POST["tID"]);
-       $stm->bindValue(3,intval($_POST["time"]));
-       $stm->bindValue(4,"false");
-
-       $stm->execute();
-
-
-       $testID=$conn->lastInsertId();
 
        $sql = "INSERT INTO question (testID,questionPosition,questionType,question,point) 
          VALUES (?,?,?,?,?)";

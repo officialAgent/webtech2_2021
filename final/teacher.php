@@ -343,7 +343,7 @@ $code= rand(pow(10, $digits-1), pow(10, $digits)-1);
                         <div class="container"> <div class=" text-center mt-5 ">
                                 <h1>Test </h1>
                                 <h2>Code:</h2>
-                                <h1 id="code"> <?php echo $code ?> </h1>
+                                <h1 id="code"><?php echo $code ?></h1>
                             </div>
                             <div class="row ">
                                 <div class="col-lg-7 mx-auto">
@@ -424,8 +424,8 @@ background-size: contain" class="footer text-center ">
                 "time":time,
                 "tID": "1"},
                 success: function(data){
-                    /*location.reload();*/
-                    alert(data);
+                    location.reload();
+
                 }
             });
         });

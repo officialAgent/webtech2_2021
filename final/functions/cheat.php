@@ -1,4 +1,5 @@
 <?php
+
 include_once("config.php");
 
 try {
@@ -10,7 +11,7 @@ try {
 } catch (PDOException $e) {
     echo "failed connection" . $e->getMessage();
 }
-$sql = "select * from studentTest  ;";
+$sql = "select * from cheat  ;";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 
@@ -18,24 +19,24 @@ $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-$kons=0;
+$kons = 0;
 foreach ($rows as $row) {
 
-    $sql2 ="SELECT fname,lname FROM users
+    $sql2 = "SELECT fname,lname FROM users
             WHERE id = ?";
     $stm2 = $conn->prepare($sql2);
-    $stm2->bindValue(1,$row['studentID']);
+    $stm2->bindValue(1, $row['studentID']);
     $stm2->execute();
     $dayMonth = $stm2->fetch(PDO::FETCH_ASSOC);
 
     $myarray2['name'] = $dayMonth['fname'];
     $myarray2['lastname'] = $dayMonth['lname'];
-    $myarray2['status'] = $row['status'];
-    $myarray[''. $kons .''] = $myarray2;
+    $myarray2['status'] = $row['text'];
+    $myarray['' . $kons . ''] = $myarray2;
 
     $kons++;
 
 }
 $myarray['hossz'] = $kons;
 
-echo json_encode($myarray,JSON_UNESCAPED_UNICODE);
+echo json_encode($myarray, JSON_UNESCAPED_UNICODE);

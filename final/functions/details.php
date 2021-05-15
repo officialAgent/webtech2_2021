@@ -13,7 +13,7 @@ error_reporting(E_ALL);
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/student.css" type="text/css">
+    <link rel="stylesheet" href="../css/student.css" type="text/css">
     <title>Document</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
@@ -158,8 +158,11 @@ background-size: contain"></div>
                     </div>
                 </div>
                 <div class="tab-pane text-center gallery" id="works">
-                    <div class="row">
+                    <div class="row  justify-content-center">
+                        <div id="cheat" class="form__group field">
 
+
+                        </div>
                     </div>
                 </div>
 
@@ -183,26 +186,63 @@ background-size: contain" class="footer text-center ">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
-<script src="js/student.js"></script>
+<script src="../js/student.js"></script>
 <script>
-    $.ajax({
-        type: 'GET',
-        url: 'http://147.175.98.97/final/functions/getstudentinfo.php',
-        success: function (data) {
+    $(document).ready(function(){
+        setInterval(function() {
+            console.log("most");
+            $.ajax({
+                type: 'GET',
+                url: 'http://147.175.98.97/final/functions/getstudentinfo.php',
+                success: function (data) {
 
-            var responsedata = $.parseJSON(data);
-            $("#myDiv").html('');
-            var hossz2=responsedata.hossz;
-            for (i=parseInt(hossz2) ; i!==0; i--){
-                console.log(i);
-
-                $("#myDiv").append( 'Holiday: '+responsedata[i-1].unnep + '    &nbsp &nbsp &nbsp   day:  '+ responsedata[i-1].nap+ ' &nbsp &nbsp &nbsp  Month:  ' + responsedata[i-1].honap+'<br>')   ;
+                    var responsedata = $.parseJSON(data);
+                    $("#sttest").html('');
+                    var hossz2=responsedata.hossz;
+                    for (i=parseInt(hossz2) ; i!==0; i--){
 
 
-            }
+                        if (responsedata[i-1].status === "working"){
+                            $("#sttest").append( 'Name: '+responsedata[i-1].name + '    &nbsp &nbsp &nbsp     '+responsedata[i-1].lastname+  '    &nbsp &nbsp &nbsp     ' +responsedata[i-1].status+ '<br>')   ;
 
-        }
+                        }
+                        else {
+                            $("#sttest").append( 'Name: '+responsedata[i-1].name + '    &nbsp &nbsp &nbsp     '+responsedata[i-1].lastname+  '    &nbsp &nbsp &nbsp     ' +responsedata[i-1].status+ '<a href="../index.php"> &nbsp &nbsp View </a>'+ '<br>')   ;
+
+                        }
+
+
+                    }
+
+                }
+            });
+        }, 5000);
+
+
+        setInterval(function() {
+            console.log("most2");
+            $.ajax({
+                type: 'GET',
+                url: 'http://147.175.98.97/final/functions/cheat.php',
+                success: function (data) {
+
+                    var responsedata = $.parseJSON(data);
+                    $("#cheat").html('');
+                    var hossz2=responsedata.hossz;
+                    for (i=parseInt(hossz2) ; i!==0; i--){
+
+
+                        $("#cheat").append( 'Name: '+responsedata[i-1].name + '    &nbsp &nbsp &nbsp     '+responsedata[i-1].lastname+   '    &nbsp &nbsp &nbsp     ' +responsedata[i-1].status+ '<br>')   ;
+
+
+                    }
+
+                }
+            });
+        }, 5000);
+
     });
+
 </script>
 
 

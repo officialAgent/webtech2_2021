@@ -59,7 +59,7 @@ if (isset($_GET['examID']) && !empty($_GET['examID'])){
          VALUES (?,?,?)";
         $stm= $conn->prepare($sql);
         $stm->bindValue(1,$_COOKIE["id"]);
-        $stm->bindValue(2,$_GET['examID']);
+        $stm->bindValue(2,$_COOKIE["tcode"]);
         $stm->bindValue(3,"working");
 
         $stm->execute();
