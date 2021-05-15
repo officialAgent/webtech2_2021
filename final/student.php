@@ -41,7 +41,7 @@ error_reporting(E_ALL);
 
 if (isset($_GET['examID']) && !empty($_GET['examID'])){
 
-    $sql = "SELECT * from test    WHERE code= ?  ";
+    $sql = "SELECT * from test    WHERE code= ? and status='true'  ";
 
     $stm = $conn->prepare($sql);
 

@@ -171,7 +171,7 @@ background-size: contain"></div>
                                                     <td>
 
                                                         <label class="switch">
-                                                            <input id="<?php echo $key?>" onchange="logStatus(this.id,<?php echo $row["code"] ?>)"  type="checkbox" >
+                                                            <input id="<?php echo $key?>" onchange="logStatus(this.id,<?php echo $row["code"] ?>)" <?php if ($row["status"]== "true"){echo "checked";}  ?>  type="checkbox" >
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </td>
@@ -403,12 +403,24 @@ background-size: contain" class="footer text-center ">
 
 <script>
 
+
     function logStatus(n, text){
         // if(document.querySelectorAll('.status_check')[n].checked === true ){
         if(document.getElementById(n).checked){
-            console.log('STATUS ACTIVE', n, text);
+            $.ajax({
+                type: 'GET',
+                url: 'http://147.175.98.97/final/functions/statuson.php',
+                data: {"data":text}
+
+
+            });
         }else {
-            console.log('STATUS NOT ACTIVE', n, text);
+            $.ajax({
+                type: 'GET',
+                url: 'http://147.175.98.97/final/functions/statusoff.php',
+                data: {"data":text}
+
+            });
         }
     }
 
