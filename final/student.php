@@ -46,6 +46,7 @@ if (isset($_GET['examID']) && !empty($_GET['examID'])){
     $stm = $conn->prepare($sql);
 
     $stm->bindValue(1,$_GET['examID']);
+    $stm->bindValue(1,$_GET['examID']);
     $stm->execute();
     $row = $stm->fetch(PDO::FETCH_ASSOC);
 
@@ -83,9 +84,15 @@ if (isset($_GET['examID']) && !empty($_GET['examID'])){
 
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
+                <script>
+                    function logout()
+                    {document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
 
+
+
+                    }</script>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)">
+                    <a class="nav-link" href="index.php" onclick="logout()">
                         <i class="material-icons">logout</i>Logout
                     </a>
                 </li>

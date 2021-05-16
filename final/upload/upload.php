@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 $target_dir = "files/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
@@ -111,6 +114,23 @@ if ($uploadOk == 0) {
         $message = "Sorry, there was an error uploading your file.";
     }
 }
+include("config.php");
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=images", $username, $password);
+} catch (PDOException $e) {
+    echo "Connection to $dbname failed : " . $e->getMessage();
+}
+
+$sql = "INSERT INTO images (test_id,user_id,link,row_id ) VALUES (?,?,?,?)";
+$stm = $conn->prepare($sql);
+$stm->bindValue(1, $_GET['testid']);
+$stm->bindValue(2, $_GET['id']);
+$stm->bindValue(3, $target_file);
+$stm->bindValue(4, $_GET['row']);
+
+$stm->execute();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

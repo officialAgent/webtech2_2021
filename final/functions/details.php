@@ -21,6 +21,7 @@ error_reporting(E_ALL);
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons">
     <link rel="stylesgeet" href="https://rawgit.com/creativetimofficial/material-kit/master/assets/css/material-kit.css">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
 </head>
 
 
@@ -43,7 +44,7 @@ try {
 
 
 ?>
-<body class="profile-page">
+<body  class="profile-page">
 <nav class="navbar navbar-color-on-scroll navbar-transparent    fixed-top  navbar-expand-lg "  color-on-scroll="100"  id="sectionsNav">
     <div class="container">
         <div class="navbar-translate">
@@ -57,9 +58,15 @@ try {
 
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
+                <script>
+                    function logout()
+                    {document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
 
+
+
+                    }</script>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)">
+                    <a class="nav-link" href="../index.php" onclick="logout()">
                         <i class="material-icons">logout</i>Logout
                     </a>
                 </li>
@@ -230,14 +237,14 @@ background-size: contain" class="footer text-center ">
                     var responsedata = $.parseJSON(data);
                     $("#sinfo").html('');
                     var hossz2=responsedata.hossz;
-                    var tr=document.createElement("tr");
-                    var d1=document.createElement("td");
-                    var d2=document.createElement("td");
-                    var d3=document.createElement("td");
-                    var d4=document.createElement("td");
-                    for (i=parseInt(hossz2) ; i!==0; i--){
 
-                        console.log(responsedata);
+                    for (i=parseInt(hossz2) ; i!==0; i--){
+                        var tr=document.createElement("tr");
+                        var d1=document.createElement("td");
+                        var d2=document.createElement("td");
+                        var d3=document.createElement("td");
+                        var d4=document.createElement("td");
+
 
                         if (responsedata[i-1].status === "working"){
 
@@ -245,26 +252,26 @@ background-size: contain" class="footer text-center ">
                            d1.innerHTML=responsedata[i-1].name;
                            d2.innerHTML=responsedata[i-1].lastname;
                            d3.innerHTML=responsedata[i-1].status;
-                            d3.innerHTML="not ready";
+                            d4.innerHTML="not ready";
                             tr.appendChild(d1);
                             tr.appendChild(d2);
                             tr.appendChild(d3);
                             tr.appendChild(d4);
-                            document.getElementById('sinfo').append(tr);
+                            document.getElementById('sinfo').appendChild(tr);
                         }
                         else {
                             d1.innerHTML=responsedata[i-1].name;
                             d2.innerHTML=responsedata[i-1].lastname;
                             d3.innerHTML=responsedata[i-1].status;
                             var a=document.createElement("a");
-                            a.href="http://147.175.98.97/final/functions/review.php?studentID=' +responsedata[i-1].studentID+ '&testID=' +responsedata[i-1].testID+ '";
+                            a.href="http://147.175.98.97/final/functions/review.php?studentID=" +responsedata[i-1].studentID+ '&testID=' +responsedata[i-1].testID;
                             a.innerHTML="view";
                             d4.appendChild(a);
                             tr.appendChild(d1);
                             tr.appendChild(d2);
                             tr.appendChild(d3);
                             tr.appendChild(d4);
-                            document.getElementById('sinfo').append(tr);
+                            document.getElementById('sinfo').appendChild(tr);
                         }
 
 
@@ -307,9 +314,16 @@ background-size: contain" class="footer text-center ">
         }, 3000);
 
     });
+    setInterval(function() {
+        $.ajax({
+            type: 'GET',
+            url: 'http://147.175.98.97/final/functions/timercheck.php',
+            
+
+        })
+    },3000);
 
 </script>
-
 
 
 </body>

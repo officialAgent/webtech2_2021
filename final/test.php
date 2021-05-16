@@ -43,8 +43,15 @@ include('qrcode/qrlib.php');
         </div>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
+                <script>
+                    function logout()
+                    {document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+
+
+
+                    }</script>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)">
+                    <a class="nav-link" href="index.php" onclick="logout()">
                         <i class="material-icons">logout</i>Logout
                     </a>
                 </li>
@@ -286,12 +293,15 @@ background-size: contain"></div>
                                                                                             Sorry, your browser is
                                                                                             rubbish.
                                                                                         </canvas>
+
+
                                                                                         <div class="col-md-12"><input
                                                                                                     type="button"
                                                                                                     id="saveC"
                                                                                                     class="btn btn-success btn-send pt-2 btn-block "
-                                                                                                    value="Save picture">
+                                                                                                    value="Save picture" onclick="savedrawtodb()">
                                                                                         </div>
+
                                                                                     </div>
                                                                                     <div style="display: none"
                                                                                          id="qrcode.<?php echo $row['questionPosition'] ?>">
@@ -303,9 +313,12 @@ background-size: contain"></div>
 
                                                                                         $test = $_COOKIE['tcode'];
                                                                                         $id = $_COOKIE['id'];
+                                                                                        $questionID=$row['id'];
 
 
-                                                                                        $link = "http://147.175.98.97/final/upload/upsite.php?testid=" . $test . "&" . "id=" . $id;
+                                                                                        $link="http://147.175.98.97/final/upload/upsite.php?testid=".$test."&"."id=".$id."&row=".$questionID;
+
+
                                                                                         $svgCode = QRcode::svg($link);
 
                                                                                         echo $svgCode;
@@ -367,7 +380,7 @@ background-size: contain"></div>
                             //
 
                             if ($rows3["answer"] == $_GET[$qp + 1]) {
-                                $allPoint++;
+                                $allPoint=$allPoint+$row['point'];
 
                             }
                         }
@@ -382,6 +395,7 @@ background-size: contain"></div>
                             $rows4 = $stm->fetchAll(PDO::FETCH_ASSOC);
 
                             foreach ($rows4 as $chbox) {
+                                $checkpoint=0;
 
                                 $new_str = str_replace(' ', '', $chbox['answer']);
 
@@ -392,21 +406,39 @@ background-size: contain"></div>
                                     $t = "false";
                                 }
 
-                                $stm = $conn->prepare("INSERT INTO checkbox_student_answers (checkboxID, studentID, student_ans) VALUES (?,?,?)");
+                                if ($chbox["checked"] == $t) {
+                                    $checkpoint++;
+                                    $allPoint++; // Solve real points problem
+                                }
+
+                                $stm = $conn->prepare("INSERT INTO checkbox_student_answers (checkboxID, studentID, student_ans,points) VALUES (?,?,?,?)");
                                 $stm->bindValue(1, $chbox["id"]);
                                 $stm->bindValue(2, $_COOKIE["id"]);
                                 $stm->bindValue(3, $t);
+                                $stm->bindValue(4,$checkpoint);
                                 $stm->execute();
 
-                                if ($chbox["checked"] == $t) {
-                                    $allPoint++; // Solve real points problem
-                                }
+
                             }
                         }
                     }
                     $allPoint = $allPoint + $_GET['dcount'];
-                    var_dump($_GET);
-                    var_dump($allPoint);
+                    $sql = "UPDATE studentTest set status='finsihed' where studentID=? and testID=?";
+                    $stm = $conn->prepare($sql);
+                    $stm->bindValue(1, $_COOKIE["id"]);
+                    $stm->bindValue(2, $_COOKIE["tcode"]);
+                    $stm->execute();
+
+
+                    $sql = "DELETE from timer  where studentID=? and testID=?";
+                    $stm = $conn->prepare($sql);
+                    $stm->bindValue(1, $_COOKIE["id"]);
+                    $stm->bindValue(2, $_COOKIE["tcode"]);
+                    $stm->execute();
+
+                   
+
+
                 }
                 ?>
             </div>
@@ -445,7 +477,7 @@ function valami($conn)
 {
     $sql = "SELECT * FROM timer WHERE student_id=? and test_id=?";
     $stm = $conn->prepare($sql);
-    $stm->bindValue(1, intval($_COOKIE['id']));
+    $stm->bindValue(1, $_COOKIE['id']);
     $stm->bindValue(2, intval($_COOKIE['tcode']));
     $stm->execute();
     $temp = $stm->fetch();
@@ -460,23 +492,24 @@ if (empty($datatime)) {
     $stm->bindValue(2, $inth);
     $stm->bindValue(3, $intm);
     $stm->bindValue(4, $intsec);
-    $stm->bindValue(5, intval($_COOKIE['id']));
+    $stm->bindValue(5, $_COOKIE['id']);
     $stm->bindValue(6, intval($_COOKIE['tcode']));
     $stm->bindValue(7, $timestamp);
     $stm->execute();
 
     $datatime = valami($conn);
 }
+
 $ora = $datatime['h'];
 $perc = $datatime['m'];
 $masodperc = $datatime['s'];
 ?>
-<script>
 
+
+<script>
 
     function logStatus(n) {
         if (document.getElementById(n).checked) {
-
             document.getElementById('rajz.' + n).style.display = 'none'
             document.getElementById('qrcode.' + n).style.display = 'block';
         } else {
@@ -485,8 +518,8 @@ $masodperc = $datatime['s'];
         }
     }
 
-    var countDownDate = <?php
-    echo strtotime("$date $ora:$perc:$masodperc") ?> *
+
+    var countDownDate = <?php echo strtotime("$date $ora:$perc:$masodperc") ?> *
     1000;
     var now = <?php echo time() ?> *
     1000;
@@ -508,14 +541,27 @@ $masodperc = $datatime['s'];
 // If the count down is over, write some text
         if (distance < 0) {
             clearInterval(x);
-            document.getElementById("demo").innerHTML = "EXPIRED";
+           // document.getElementById("demo").innerHTML = "EXPIRED";
+
+
+
+
             $.ajax({
                 type: 'GET',
                 url: 'http://147.175.98.97/final/functions/mangetesttime.php',
 
             });
+            document.getElementById("demo").innerHTML="Time is up-You will be redirected after 5sec"
+            setTimeout(function ()
+            {
+
+                window.location.replace("student.php");
+            },5000);
         }
     }, 1000);
+
+
+
 </script>
 
 <script>
@@ -555,15 +601,23 @@ $masodperc = $datatime['s'];
         var d = document.getElementById("dcount").value;
 
         let student_answers = {};
-
+        let dragpoint=0;
         let countCorrect = 0;
         alert(d);
         for (var i = 0; i < d; i++) {
             let size = Object.keys(student_answers).length;
-            student_answers[size+1] = {student_answer1 : document.getElementById('question.' + i).firstChild.nodeValue, student_answer2 : document.getElementById('question.' + i).lastElementChild.innerText};
+
+
             if (document.getElementById('question.' + i).firstElementChild === document.getElementById('ans.' + i)) {
                 countCorrect++;
+                dragpoint=1;
             }
+            else {
+                dragpoint=0;
+            }
+            student_answers[size+1] = {student_answer1 : document.getElementById('question.' + i).firstChild.nodeValue, student_answer2 : document.getElementById('question.' + i).lastElementChild.innerText,point:dragpoint};
+
+
         }
 
         $.ajax({
@@ -710,5 +764,13 @@ $masodperc = $datatime['s'];
         });
     }
 </script>
+<script>
+function savedrawtodb()
+{
+    let canvasdata=canvas.toDataURL("image/png");
+    alert(canvasdata);
+}
+</script>
+
 </body>
 </html>

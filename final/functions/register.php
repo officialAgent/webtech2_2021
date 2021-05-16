@@ -47,7 +47,7 @@ if (isset($_POST['fname']) && !empty($_POST['fname']) )
 
         $error="Error in Role";
     }
-    if ($_POST['role'] != "1" ||$_POST['role'] != "2" ){
+    if ($_POST['role'] != "1" && $_POST['role'] != "2" ){
         $error="Error in Role";
     }
 

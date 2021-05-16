@@ -24,7 +24,7 @@
         <ion-icon  name="folder-outline"></ion-icon>
         <p></p>
     </div>
-    <form action="upload.php" method="POST" class="signupForm" name="signupform" enctype="multipart/form-data">
+    <form action="upload.php<?php echo"?id=".$_GET['id']."&testid=".$_GET['testid']."&row=".$_GET['row']?>" method="POST" class="signupForm" name="signupform" enctype="multipart/form-data">
         <h2>Select a file to upload:</h2>
         <ul class="noBullet">
             <li>
