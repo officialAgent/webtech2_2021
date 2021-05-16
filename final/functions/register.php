@@ -47,9 +47,12 @@ if (isset($_POST['fname']) && !empty($_POST['fname']) )
 
         $error="Error in Role";
     }
+    if ($_POST['role'] != "1" ||$_POST['role'] != "2" ){
+        $error="Error in Role";
+    }
 
 
-    if (isset($_POST['uid']) && !empty($_POST['uid']) && isset($_POST['password']) && !empty($_POST['password']) && isset($_POST['email']) && !empty($_POST['email'])&& isset($_POST['lname']) && !empty($_POST['lname']) && isset($_POST['role']) && !empty($_POST['role']) ){
+   else if (isset($_POST['uid']) && !empty($_POST['uid']) && isset($_POST['password']) && !empty($_POST['password']) && isset($_POST['email']) && !empty($_POST['email'])&& isset($_POST['lname']) && !empty($_POST['lname']) && isset($_POST['role']) && !empty($_POST['role'])  ){
 
 
         $sql = "INSERT INTO users  (email,password,fname,lname,uid,role,secret)

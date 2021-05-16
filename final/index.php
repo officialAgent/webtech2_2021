@@ -23,13 +23,13 @@ include 'functions/login.php';
 
 <header class="header">
     <div class="brand-box">
-        <span class="brand">Nagyfaszu Tibor S.R.O.</span>
+        <span class="brand">Online Test Aplication  </span>
     </div>
 
     <div class="text-box">
         <h1 class="heading-primary">
-            <span class="heading-primary-main">Online exam test aplication</span>
-            <span class="heading-primary-sub">Made by Tibi AKA nagyfaszu</span>
+            <span class="heading-primary-main">Online Test Aplication</span>
+            <span class="heading-primary-sub">STU FEI WETECH 2 FINAL ZADANIE 2021  </span>
         </h1>
         <a href="#login" class="btn btn-white btn-animated">Login </a>
         <button type="button" style="    border-radius: 100px;text-transform: uppercase;padding: 10px 20px;" class="btn btn-white btn-animated" data-toggle="modal" data-target="#form">
@@ -162,20 +162,25 @@ include 'functions/login.php';
             <div class="col-11">
                 <div class="row ">
                     <div class="col-xl-8 col-md-4 col-sm-4 col-12 my-auto mx-auto a">
-                        <h3 class="text-muted mb-md-0 mb-5 bold-text">Tibi</h3>
+                        <h3 class="text-muted mb-md-0 mb-5 bold-text ">Made by:</h3>
+                        <h4></h4>
+                        <h4>Tibor Ládi</h4>
+                        <h4>Ladislav Rajcsányi</h4>
+                        <h4>Tódor Sándor</h4>
+                        <h4>Zsombor Orosz</h4>
                     </div>
                     <div class="col-xl-2 col-md-4 col-sm-4 col-12">
 
                     </div>
                     <div class="col-xl-2 col-md-4 col-sm-4 col-12">
-                        <h6 class="mb-3 mb-lg-4 text-muted bold-text mt-sm-0 mt-5"><b>ADDRESS</b></h6>
-                        <p class="mb-1">605, RATAN ICON BUILDING</p>
-                        <p>SEAWOODS SECTOR</p>
+                        <h6 class="mb-3 mb-lg-4 text-muted bold-text mt-sm-0 mt-5"><b>Contact</b></h6>
+                        <p class="mb-1">tibififa@gmail.com</p>
+                        <p>+421 918 725 469</p>
                     </div>
                 </div>
-                <div class="row ">
+               <!-- <div class="row ">
                     <div class="col-xl-8 col-md-4 col-sm-4 col-auto my-md-0 mt-5 order-sm-1 order-3 align-self-end">
-                        <p class="social text-muted mb-0 pb-0 bold-text"> <span class="mx-2"><i class="fa fa-facebook" aria-hidden="true"></i></span> <span class="mx-2"><i class="fa fa-linkedin-square" aria-hidden="true"></i></span> <span class="mx-2"><i class="fa fa-twitter" aria-hidden="true"></i></span> <span class="mx-2"><i class="fa fa-instagram" aria-hidden="true"></i></span> </p><small class="rights"><span>&#174;</span> Tibor All Rights Reserved.</small>
+                        <p class="social text-muted mb-0 pb-0 bold-text"> <span class="mx-2"><i class="fa fa-facebook" aria-hidden="true"></i></span> <span class="mx-2"><i class="fa fa-linkedin-square" aria-hidden="true"></i></span> <span class="mx-2"><i class="fa fa-twitter" aria-hidden="true"></i></span> <span class="mx-2"><i class="fa fa-instagram" aria-hidden="true"></i></span> </p><small class="rights"><span>&#174;</span> All Rights Reserved.</small>
                     </div>
                     <div class="col-xl-2 col-md-4 col-sm-4 col-auto order-1 align-self-end ">
                         <h6 class="mt-55 mt-2 text-muted bold-text"><b>ANIRUDH SINGLA</b></h6><small> <span><i class="fa fa-envelope" aria-hidden="true"></i></span> anirudh@gmail.com</small>
@@ -183,7 +188,7 @@ include 'functions/login.php';
                     <div class="col-xl-2 col-md-4 col-sm-4 col-auto order-2 align-self-end mt-3 ">
                         <h6 class="text-muted bold-text"><b>RISHABH SHEKHAR</b></h6><small><span><i class="fa fa-envelope" aria-hidden="true"></i></span> rishab@gmail.com</small>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </footer>

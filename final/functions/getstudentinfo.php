@@ -1,6 +1,8 @@
 <?php
 include_once("config.php");
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 try {
 
     $conn = new PDO("mysql:host=$servername;dbname=final", $username, $password);
@@ -10,7 +12,8 @@ try {
 } catch (PDOException $e) {
     echo "failed connection" . $e->getMessage();
 }
-$sql = "select * from studentTest  ;";
+$tcode=$_GET["data"];
+$sql = "select * from studentTest where testID='$tcode' ;";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 
@@ -21,7 +24,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $kons=0;
 foreach ($rows as $row) {
 
-    $sql2 ="SELECT fname,lname FROM users
+    $sql2 ="SELECT fname,lname,secret FROM users
             WHERE secret = ?";
     $stm2 = $conn->prepare($sql2);
     $stm2->bindValue(1,$row['studentID']);
@@ -30,6 +33,8 @@ foreach ($rows as $row) {
 
     $myarray2['name'] = $dayMonth['fname'];
     $myarray2['lastname'] = $dayMonth['lname'];
+    $myarray2['studentID'] = $dayMonth['secret'];
+    $myarray2['testID'] = $row['testID'];
     $myarray2['status'] = $row['status'];
     $myarray[''. $kons .''] = $myarray2;
 

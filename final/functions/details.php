@@ -39,33 +39,7 @@ try {
 }
 
 
-if (isset($_GET['examID']) && !empty($_GET['examID'])){
 
-    $sql = "SELECT * from test    WHERE code= ?  ";
-
-    $stm = $conn->prepare($sql);
-
-    $stm->bindValue(1,$_GET['examID']);
-    $stm->execute();
-    $row = $stm->fetch(PDO::FETCH_ASSOC);
-
-    if (empty($row)){
-
-        $codeERROR='Wrong code or test is offline';
-    }
-    else{
-        setcookie('tcode',$_GET['examID'], time() + (86400 * 30), "/"); // 86400 = 1 day
-        $sql = "INSERT INTO studentTest (studentID,testID,status) 
-         VALUES (?,?,?)";
-        $stm= $conn->prepare($sql);
-        $stm->bindValue(1,$_COOKIE["id"]);
-        $stm->bindValue(2,$_GET['examID']);
-        $stm->bindValue(3,"working");
-
-        $stm->execute();
-        echo '<script>window.location="test.php"</script>';
-    }
-}
 
 
 ?>
@@ -114,16 +88,14 @@ background-size: contain"></div>
                         <div class="avatar">
                             <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnN2Z2pzPSJodHRwOi8vc3ZnanMuY29tL3N2Z2pzIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTIiIHhtbDpzcGFjZT0icHJlc2VydmUiIGNsYXNzPSIiPjxnPgo8cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSIiIGQ9Ik00MjkuNjYzLDIyMC41MTdjMC0wLjA0OCwwLjAwNi0wLjA5NiwwLjAwNi0wLjE0NUM0MjkuNjY5LDE5MC44NzEsMzUxLjkxNSwwLDI1NiwwICBTODIuMzMxLDE5MC44NzEsODIuMzMxLDIyMC4zNzJjMCwwLjA0OCwwLjAwNiwwLjA5NiwwLjAwNiwwLjE0NWMwLDAuMDQ1LTAuMDA2LDAuMDkxLTAuMDA2LDAuMTM2ICBjMCwyNy40ODEsMTE3LjA5NywxNzEuOTQ5LDE3My42NjksMTcxLjk0OWM1NS4zNTYsMCwxNzMuNjY5LTE0NC40NjgsMTczLjY2OS0xNzEuOTQ5YzAtMC4wNDctMC4wMDYtMC4wOTQtMC4wMDYtMC4xNCAgQzQyOS42NjMsMjIwLjUxNCw0MjkuNjYzLDIyMC41MTUsNDI5LjY2MywyMjAuNTE3eiIgZmlsbD0iIzEzNTM3MCIgZGF0YS1vcmlnaW5hbD0iIzEzNTM3MCI+PC9wYXRoPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgoJPHBhdGggc3R5bGU9IiIgZD0iTTM3Mi4wMzksMjE2LjYxMWgtMTkuNzI0di01Ny4yMDJoMTkuNzI0YzEwLjE2NCwwLDE4LjQwNCw4LjI0LDE4LjQwNCwxOC40MDR2MjAuMzk0ICAgQzM5MC40NDMsMjA4LjM3MiwzODIuMjAzLDIxNi42MTEsMzcyLjAzOSwyMTYuNjExeiIgZmlsbD0iI2Y0Yzg5MiIgZGF0YS1vcmlnaW5hbD0iI2Y0Yzg5MiI+PC9wYXRoPgoJPHBhdGggc3R5bGU9IiIgZD0iTTEzOS45NjEsMjE2LjYxMWgxOS43MjR2LTU3LjIwMmgtMTkuNzI0Yy0xMC4xNjQsMC0xOC40MDQsOC4yNC0xOC40MDQsMTguNDA0djIwLjM5NCAgIEMxMjEuNTU3LDIwOC4zNzIsMTI5Ljc5NiwyMTYuNjExLDEzOS45NjEsMjE2LjYxMXoiIGZpbGw9IiNmNGM4OTIiIGRhdGEtb3JpZ2luYWw9IiNmNGM4OTIiPjwvcGF0aD4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgoJPHBhdGggc3R5bGU9IiIgZD0iTTMyMy4xODYsMzE4LjQ3NWwtMTIuNDQyLTIuNTAxYy04LjgyOC0xLjc3NC0xNS4xOC05LjUyOS0xNS4xOC0xOC41MzR2LTE3LjkyNmgtODEuMzgydjE4LjM3OSAgIGMwLDkuMDA1LTYuMzUxLDE2Ljc2LTE1LjE4LDE4LjUzNGwtMTAuMTg5LDIuMDQ4djY4LjQzMmgxMzQuMzcydi02OC40MzJIMzIzLjE4NnoiIGZpbGw9IiNmZWQ5YTgiIGRhdGEtb3JpZ2luYWw9IiNmZWQ5YTgiPjwvcGF0aD4KCTxwYXRoIHN0eWxlPSIiIGQ9Ik0yNTYsMjkzLjAwN0wyNTYsMjkzLjAwN2MtNTguNzU0LDAtMTA2LjM4NC00Ny42My0xMDYuMzg0LTEwNi4zODR2LTI5Ljg5NyAgIGMwLTU4Ljc1NCw0Ny42My0xMDYuMzg0LDEwNi4zODQtMTA2LjM4NGwwLDBjNTguNzU0LDAsMTA2LjM4NCw0Ny42MywxMDYuMzg0LDEwNi4zODR2MjkuODk3ICAgQzM2Mi4zODQsMjQ1LjM3NywzMTQuNzU0LDI5My4wMDcsMjU2LDI5My4wMDd6IiBmaWxsPSIjZmVkOWE4IiBkYXRhLW9yaWdpbmFsPSIjZmVkOWE4Ij48L3BhdGg+CjwvZz4KPHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBzdHlsZT0iIiBkPSJNMjU2LDUwLjM0MkwyNTYsNTAuMzQyYy05LjYwMSwwLTE4LjkwMiwxLjI3OS0yNy43NSwzLjY2NCAgYzQ1LjI5NiwxMi4yMDcsNzguNjM0LDUzLjU2Nyw3OC42MzQsMTAyLjcydjI5Ljg5N2MwLDQ5LjE1My0zMy4zMzgsOTAuNTEyLTc4LjYzNCwxMDIuNzJjOC44NDgsMi4zODQsMTguMTQ5LDMuNjY0LDI3Ljc1LDMuNjY0bDAsMCAgYzU4Ljc1NCwwLDEwNi4zODQtNDcuNjMsMTA2LjM4NC0xMDYuMzg0di0yOS44OTdDMzYyLjM4NCw5Ny45NzIsMzE0Ljc1NCw1MC4zNDIsMjU2LDUwLjM0MnoiIGZpbGw9IiNmNGNlOWYiIGRhdGEtb3JpZ2luYWw9IiNmNGNlOWYiPjwvcGF0aD4KPHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBzdHlsZT0iIiBkPSJNMjU2LDE1OS44ODNjOTUuNzU3LDAsMTczLjQwOSwzMy4xNzksMTczLjY2Myw2MC42MzRjMC0wLjA0OCwwLjAwNi0wLjA5NiwwLjAwNi0wLjE0NSAgQzQyOS42NjksMTkwLjg3MSwzNTEuOTE1LDAsMjU2LDBTODIuMzMxLDE5MC44NzEsODIuMzMxLDIyMC4zNzJjMCwwLjA0OCwwLjAwNiwwLjA5NiwwLjAwNiwwLjE0NSAgQzgyLjU5MSwxOTMuMDYyLDE2MC4yNDMsMTU5Ljg4MywyNTYsMTU5Ljg4M3oiIGZpbGw9IiMxZTYwOGIiIGRhdGEtb3JpZ2luYWw9IiMxZTYwOGIiIGNsYXNzPSIiPjwvcGF0aD4KPHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBzdHlsZT0iIiBkPSJNMjU2LDBjLTguNDQ1LDAtMTYuNzQ5LDEuNDg2LTI0Ljg3Miw0LjIwNUMyOTMuMDcxLDI0Ljk0LDM0NC40NiwxMTcuNzM0LDM2Ny4yNTksMTc1Ljk4ICBjMzguMDI1LDEyLjEyNSw2Mi4yNjIsMjkuMjIxLDYyLjQwNCw0NC41MzdjMC0wLjA0OCwwLjAwNi0wLjA5NiwwLjAwNi0wLjE0NUM0MjkuNjY5LDE5MC44NzEsMzUxLjkxNSwwLDI1NiwweiIgZmlsbD0iIzEzNTM3MCIgZGF0YS1vcmlnaW5hbD0iIzEzNTM3MCI+PC9wYXRoPgo8cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSIiIGQ9Ik00OTAuNTEsNTAwLjM4OGMtNC42MjUtMzQuMDEtMjMuNDIzLTEzMi42My04Ny45ODktMTU4LjUzOGwtNzMuNjQzLTIyLjk2MUgxODMuMTIyTDEwOS40OCwzNDEuODUgIGMtNjQuNTY2LDI1LjkwOC04My4zNjUsMTI0LjUyNy04Ny45OSwxNTguNTM4QzIwLjY1NCw1MDYuNTM0LDI1LjQ0Nyw1MTIsMzEuNjUsNTEyaDQ0OC43ICBDNDg2LjU1Myw1MTIsNDkxLjM0Niw1MDYuNTM0LDQ5MC41MSw1MDAuMzg4eiIgZmlsbD0iIzFlNjA4YiIgZGF0YS1vcmlnaW5hbD0iIzFlNjA4YiIgY2xhc3M9IiI+PC9wYXRoPgo8cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSIiIGQ9Ik00OTAuNTEsNTAwLjM4OGMtNC42MjUtMzQuMDEtMjMuNDIzLTEzMi42My04Ny45ODktMTU4LjUzOGwtNzMuNjQzLTIyLjk2MWgtNTYuNzAzbDczLjY0MywyMi45NjEgIEM0MjQuMjI0LDM3My4zMTIsNDM1LjEzOSw1MTIsNDM1LjEzOSw1MTJoNDUuMjExQzQ4Ni41NTMsNTEyLDQ5MS4zNDYsNTA2LjUzNCw0OTAuNTEsNTAwLjM4OHoiIGZpbGw9IiMxMzUzNzAiIGRhdGEtb3JpZ2luYWw9IiMxMzUzNzAiPjwvcGF0aD4KPHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBzdHlsZT0iIiBkPSJNNDAxLjU5NiwzMTUuMTYzSDExMC40MDRjLTkuNjY0LDAtMTcuNDk4LDcuODM0LTE3LjQ5OCwxNy40OThWNDk4LjU5aDMyNi4xODlWMzMyLjY2MSAgQzQxOS4wOTQsMzIyLjk5Nyw0MTEuMjYsMzE1LjE2Myw0MDEuNTk2LDMxNS4xNjN6IiBmaWxsPSIjY2ZjZmNmIiBkYXRhLW9yaWdpbmFsPSIjY2ZjZmNmIj48L3BhdGg+CjxwYXRoIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3R5bGU9IiIgZD0iTTQwMS41OTcsMzE1LjE2M2gtNTUuNWM5LjY2NCwwLDE3LjQ5OCw3LjgzNCwxNy40OTgsMTcuNDk4VjQ5OC41OWg1NS41VjMzMi42NjEgIEM0MTkuMDk0LDMyMi45OTcsNDExLjI2LDMxNS4xNjMsNDAxLjU5NywzMTUuMTYzeiIgZmlsbD0iI2MyYzRjNiIgZGF0YS1vcmlnaW5hbD0iI2MyYzRjNiI+PC9wYXRoPgo8cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSIiIGQ9Ik00MjkuNjIxLDQ4NS41NzVIODIuMzc5Yy02LjU4NSwwLTExLjkyMyw1LjMzOC0xMS45MjMsMTEuOTIzdjIuNTc5ICBjMCw2LjU4NSw1LjMzOCwxMS45MjMsMTEuOTIzLDExLjkyM2gzNDcuMjQyYzYuNTg1LDAsMTEuOTIzLTUuMzM4LDExLjkyMy0xMS45MjN2LTIuNTc5ICBDNDQxLjU0NCw0OTAuOTEzLDQzNi4yMDYsNDg1LjU3NSw0MjkuNjIxLDQ4NS41NzV6IiBmaWxsPSIjOWM5ZGEwIiBkYXRhLW9yaWdpbmFsPSIjOWM5ZGEwIj48L3BhdGg+CjxwYXRoIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3R5bGU9IiIgZD0iTTQyOS42MjEsNDg1LjU3NUgzODUuN1Y1MTJoNDMuOTIxYzYuNTg1LDAsMTEuOTIzLTUuMzM4LDExLjkyMy0xMS45MjN2LTIuNTc5ICBDNDQxLjU0NCw0OTAuOTEzLDQzNi4yMDYsNDg1LjU3NSw0MjkuNjIxLDQ4NS41NzV6IiBmaWxsPSIjOGQ4ZjkzIiBkYXRhLW9yaWdpbmFsPSIjOGQ4ZjkzIj48L3BhdGg+CjxjaXJjbGUgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBzdHlsZT0iIiBjeD0iMjU2IiBjeT0iNDA3LjMzIiByPSIyNC40ODIiIGZpbGw9IiNmZmZmZmYiIGRhdGEtb3JpZ2luYWw9IiNmZmZmZmYiPjwvY2lyY2xlPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgoJPHBhdGggc3R5bGU9IiIgZD0iTTI4Mi41MDEsMTg3Ljk3OGMtMTkuMjQxLTcuMTMzLTMzLjU5Ny03LjE5My01My4wMDIsMGwwLDBjMS4zODYsMi44MjgsMi4wNzgsNC4yNDMsMy40NjQsNy4wNzEgICBjMC4zOTEsMC43OTksMC44MjgsMS41NywxLjI4MSwyLjMzMWMxNi41MzYtNS42NywyNy4xMDMtNS42NTYsNDMuNjI1LDAuMDU1QzI3OS43MjEsMTkzLjY1MywyODAuNjQ4LDE5MS43NjEsMjgyLjUwMSwxODcuOTc4eiIgZmlsbD0iIzRkNGQ0ZCIgZGF0YS1vcmlnaW5hbD0iIzRkNGQ0ZCI+PC9wYXRoPgoJPHBhdGggc3R5bGU9IiIgZD0iTTM2Mi4zODQsMTg2LjYyM3YtNS41NjRoLTM2LjU2NWwwLDB2Ny44NzRjMCwwLjg5LDAuMDQ4LDEuNzc0LDAuMTE4LDIuNjU3aDM2LjMzMSAgIEMzNjIuMzQyLDE4OS45NDQsMzYyLjM4NCwxODguMjg5LDM2Mi4zODQsMTg2LjYyM3oiIGZpbGw9IiM0ZDRkNGQiIGRhdGEtb3JpZ2luYWw9IiM0ZDRkNGQiPjwvcGF0aD4KCTxwYXRoIHN0eWxlPSIiIGQ9Ik0xNDkuNjE2LDE4MS4wNnY1LjU2NGMwLDEuNjY2LDAuMDUyLDMuMzIsMC4xMjgsNC45NjdoMzYuNDM3VjE4MS4wNkgxNDkuNjE2eiIgZmlsbD0iIzRkNGQ0ZCIgZGF0YS1vcmlnaW5hbD0iIzRkNGQ0ZCI+PC9wYXRoPgoJPHBhdGggc3R5bGU9IiIgZD0iTTIyNS40ODUsMjE1LjI5OWgtMzkuNDA2Yy00LjM0MSwwLTcuODYtMy41MTktNy44Ni03Ljg2di0yMi40MzNjMC00LjM0MSwzLjUxOS03Ljg2LDcuODYtNy44NiAgIGg0OS4xMThjNC4zNDEsMCw3Ljg2LDMuNTE5LDcuODYsNy44NnYxMi43MjFDMjQzLjA1NywyMDcuNDMyLDIzNS4xOSwyMTUuMjk5LDIyNS40ODUsMjE1LjI5OXoiIGZpbGw9IiM0ZDRkNGQiIGRhdGEtb3JpZ2luYWw9IiM0ZDRkNGQiPjwvcGF0aD4KCTxwYXRoIHN0eWxlPSIiIGQ9Ik0yODYuNTE1LDIxNS4yOTloMzkuNDA2YzQuMzQxLDAsNy44Ni0zLjUxOSw3Ljg2LTcuODZ2LTIyLjQzM2MwLTQuMzQxLTMuNTE5LTcuODYtNy44Ni03Ljg2ICAgaC00OS4xMThjLTQuMzQxLDAtNy44NiwzLjUxOS03Ljg2LDcuODZ2MTIuNzIxQzI2OC45NDMsMjA3LjQzMiwyNzYuODEsMjE1LjI5OSwyODYuNTE1LDIxNS4yOTl6IiBmaWxsPSIjNGQ0ZDRkIiBkYXRhLW9yaWdpbmFsPSIjNGQ0ZDRkIj48L3BhdGg+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KCTxwYXRoIHN0eWxlPSIiIGQ9Ik0zMjUuOTIxLDE3Ny4xNDVoLTQ3LjcxM3YzNi4wNjZjMi40NzQsMS4zMyw1LjMwMSwyLjA4OCw4LjMwNywyLjA4OGgzOS40MDYgICBjNC4zNDEsMCw3Ljg2LTMuNTE5LDcuODYtNy44NnYtMjIuNDMzQzMzMy43ODEsMTgwLjY2NSwzMzAuMjYyLDE3Ny4xNDUsMzI1LjkyMSwxNzcuMTQ1eiIgZmlsbD0iIzM1MzUzNSIgZGF0YS1vcmlnaW5hbD0iIzM1MzUzNSI+PC9wYXRoPgoJPHBhdGggc3R5bGU9IiIgZD0iTTIzNS4xOTcsMTc3LjE0NWgtNDcuNzM5djM4LjE1NGgzOC4wMjdjOS43MDUsMCwxNy41NzItNy44NjcsMTcuNTcyLTE3LjU3MnYtMTIuNzIxICAgQzI0My4wNTcsMTgwLjY2NSwyMzkuNTM4LDE3Ny4xNDUsMjM1LjE5NywxNzcuMTQ1eiIgZmlsbD0iIzM1MzUzNSIgZGF0YS1vcmlnaW5hbD0iIzM1MzUzNSI+PC9wYXRoPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjxnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjwvZz4KPGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9nPgo8ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8L2c+CjwvZz48L3N2Zz4=" />                        </div>
                         <div class="name">
-                            <h3 class="title">Tibor Ládi</h3>
-                            <h6>Student</h6>
+                            <h3 class="title">Test</h3>
+                            <h6 id="tcode"><?php echo $_GET['code']?></h6>
 
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="description text-center">
-                <p>May God make the exam easier for you! Don’t be nervous because I am sure you will be able to answer every question! My prayers are with you. I wish you the best for your exam. </p>
-            </div>
+
             <div class="row">
                 <div class="col-md-6 ml-auto mr-auto">
                     <div class="profile-tabs">
@@ -151,7 +123,40 @@ background-size: contain"></div>
             <div class="tab-content tab-space">
                 <div class="tab-pane active text-center gallery" id="studio">
                     <div class="row  justify-content-center">
-                        <div id="sttest" class="form__group field">
+                        <div  class="form__group field">
+
+
+                            <div class="container">
+                                <div class="row"  style="margin-top: 50px;">
+                                    <div class="col-md-12 text-center">
+                                        <div class="outer-form">
+                                            <table class="table-striped table table-bordered vertical">
+                                                <thead style="color: white; font-weight: normal; background-color: black;" >
+                                                <tr >
+                                                    <th style="color: orangered"  class="head">Name</th>
+                                                    <th  style="color: orangered" class="head">Last name</th>
+                                                    <th  style="color: orangered" class="head">Status</th>
+                                                    <th  style="color: orangered" class="head">Open</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody id="sinfo"  class="text-center" style="border:1px solid transparent; background-color:#242424; color:#A1A6AB; text-align: left;">
+
+
+
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
 
 
                         </div>
@@ -160,7 +165,32 @@ background-size: contain"></div>
                 <div class="tab-pane text-center gallery" id="works">
                     <div class="row  justify-content-center">
                         <div id="cheat" class="form__group field">
+                            <div class="container">
+                                <div class="row"  style="margin-top: 50px;">
+                                    <div class="col-md-12 text-center">
+                                        <div class="outer-form">
+                                            <table class="table-striped table table-bordered vertical">
+                                                <thead style="color: white; font-weight: normal; background-color: black;" >
+                                                <tr >
+                                                    <th style="color: orangered"  class="head">Name</th>
+                                                    <th  style="color: orangered" class="head">Last name</th>
+                                                    <th  style="color: orangered" class="head">Status</th>
 
+                                                </tr>
+                                                </thead>
+
+                                                <tbody id="cheatinfo"  class="text-center" style="border:1px solid transparent; background-color:#242424; color:#A1A6AB; text-align: left;">
+
+
+
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -194,21 +224,47 @@ background-size: contain" class="footer text-center ">
             $.ajax({
                 type: 'GET',
                 url: 'http://147.175.98.97/final/functions/getstudentinfo.php',
+                data: {"data":document.getElementById('tcode').innerHTML},
                 success: function (data) {
 
                     var responsedata = $.parseJSON(data);
-                    $("#sttest").html('');
+                    $("#sinfo").html('');
                     var hossz2=responsedata.hossz;
+                    var tr=document.createElement("tr");
+                    var d1=document.createElement("td");
+                    var d2=document.createElement("td");
+                    var d3=document.createElement("td");
+                    var d4=document.createElement("td");
                     for (i=parseInt(hossz2) ; i!==0; i--){
 
+                        console.log(responsedata);
 
                         if (responsedata[i-1].status === "working"){
-                            $("#sttest").append( 'Name: '+responsedata[i-1].name + '    &nbsp &nbsp &nbsp     '+responsedata[i-1].lastname+  '    &nbsp &nbsp &nbsp     ' +responsedata[i-1].status+ '<br>')   ;
 
+
+                           d1.innerHTML=responsedata[i-1].name;
+                           d2.innerHTML=responsedata[i-1].lastname;
+                           d3.innerHTML=responsedata[i-1].status;
+                            d3.innerHTML="not ready";
+                            tr.appendChild(d1);
+                            tr.appendChild(d2);
+                            tr.appendChild(d3);
+                            tr.appendChild(d4);
+                            document.getElementById('sinfo').append(tr);
                         }
                         else {
-                            $("#sttest").append( 'Name: '+responsedata[i-1].name + '    &nbsp &nbsp &nbsp     '+responsedata[i-1].lastname+  '    &nbsp &nbsp &nbsp     ' +responsedata[i-1].status+ '<a href="../index.php"> &nbsp &nbsp View </a>'+ '<br>')   ;
-
+                            d1.innerHTML=responsedata[i-1].name;
+                            d2.innerHTML=responsedata[i-1].lastname;
+                            d3.innerHTML=responsedata[i-1].status;
+                            var a=document.createElement("a");
+                            a.href="http://147.175.98.97/final/functions/review.php?studentID=' +responsedata[i-1].studentID+ '&testID=' +responsedata[i-1].testID+ '";
+                            a.innerHTML="view";
+                            d4.appendChild(a);
+                            tr.appendChild(d1);
+                            tr.appendChild(d2);
+                            tr.appendChild(d3);
+                            tr.appendChild(d4);
+                            document.getElementById('sinfo').append(tr);
                         }
 
 
@@ -216,7 +272,7 @@ background-size: contain" class="footer text-center ">
 
                 }
             });
-        }, 5000);
+        }, 3000);
 
 
         setInterval(function() {
@@ -224,22 +280,31 @@ background-size: contain" class="footer text-center ">
             $.ajax({
                 type: 'GET',
                 url: 'http://147.175.98.97/final/functions/cheat.php',
+                data: {"data":document.getElementById('tcode').innerHTML},
                 success: function (data) {
 
                     var responsedata = $.parseJSON(data);
-                    $("#cheat").html('');
+                    $("#cheatinfo").html('');
                     var hossz2=responsedata.hossz;
                     for (i=parseInt(hossz2) ; i!==0; i--){
 
-
-                        $("#cheat").append( 'Name: '+responsedata[i-1].name + '    &nbsp &nbsp &nbsp     '+responsedata[i-1].lastname+   '    &nbsp &nbsp &nbsp     ' +responsedata[i-1].status+ '<br>')   ;
-
+                        var tr=document.createElement("tr");
+                        var d1=document.createElement("td");
+                        var d2=document.createElement("td");
+                        var d3=document.createElement("td");
+                        d1.innerHTML=responsedata[i-1].name;
+                        d2.innerHTML=responsedata[i-1].lastname;
+                        d3.innerHTML=responsedata[i-1].status;
+                        tr.appendChild(d1);
+                        tr.appendChild(d2);
+                        tr.appendChild(d3);
+                        document.getElementById('cheatinfo').append(tr);
 
                     }
 
                 }
             });
-        }, 5000);
+        }, 3000);
 
     });
 

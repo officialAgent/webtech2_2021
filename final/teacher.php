@@ -166,7 +166,7 @@ background-size: contain"></div>
 
                                                     <td><?php echo $row["code"] ?></td>
                                                     <td>
-                                                    <a href='functions/details.php'>Details</a>
+                                                    <a href='functions/details.php?code=<?php echo $row["code"] ?>'>Details</a>
                                                     </td>
                                                     <td>
 
@@ -240,10 +240,10 @@ $code= rand(pow(10, $digits-1), pow(10, $digits)-1);
                                                         <div class="row">
                                                             <div class="form-group col-md-12">  <select  id="qType" name="need" class="form-control" required="required" data-error="Please specify your need.">
                                                                     <option selected>Q type</option>
-                                                                    <option value="q1">q1</option>
-                                                                    <option value="q2">q2</option>
-                                                                    <option value="q3">q3</option>
-                                                                    <option value="2">q4</option>
+                                                                    <option value="q1">Q and A</option>
+                                                                    <option value="q2">Multi Answer</option>
+                                                                    <option value="q3">Matching</option>
+                                                                    <option value="q4">Drawing</option>
 
                                                                 </select> </div>
                                                         </div>
@@ -309,15 +309,6 @@ $code= rand(pow(10, $digits-1), pow(10, $digits)-1);
 
 
 
-                                                        <div class="questions" id="q4">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">  <textarea id="q5q" name="message" class="form-control" placeholder="Write your question here." rows="4" required="required" data-error="Please, leave us a message."></textarea> </div>
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
 
 
 
@@ -758,7 +749,40 @@ background-size: contain" class="footer text-center ">
             document.getElementById('show').appendChild(divr);
 
         }
+        if (mode === "q4"){
+            var q= document.getElementById('q4q').value;
 
+
+            var person = {question:q, type:'draw'};
+
+            // Get the current size of the object
+            var size = Object.keys(qs).length
+
+            var p= document.getElementById('points').value
+
+//add a new alert
+            qs[size + 1] = {question:q,  type:'draw',point:p}
+            /* var  linebreak = document.createElement("br");
+             document.getElementById('rendes').append(size+1,'.Question   = ',person.question,'  ans  = ',person.ans,linebreak);*/
+
+
+            var divr = document.createElement("div");
+            divr.className = "row"; // set the CSS class
+
+            var div = document.createElement("div");
+            div.className = "col-md-12"; // set the CSS class
+
+
+
+
+            var h = document.createElement("p");
+            h.append(size+1,'.Question   = ',q,'    Points = ',p);
+
+
+            div.appendChild(h);
+            divr.appendChild(div);
+            document.getElementById('show').appendChild(divr);
+        }
 
     })
 

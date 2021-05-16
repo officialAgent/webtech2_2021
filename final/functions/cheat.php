@@ -11,7 +11,8 @@ try {
 } catch (PDOException $e) {
     echo "failed connection" . $e->getMessage();
 }
-$sql = "select * from cheat  ;";
+$tcode=$_GET["data"];
+$sql = "select * from cheat where testID='$tcode' ;";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 

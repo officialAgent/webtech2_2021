@@ -21,7 +21,7 @@ try {
 
 if(isset($_POST['data']) ){
     $data = json_decode($_POST['data'],true);
-    var_dump($data);
+
     //$_POST['data'] contain the value that you sent via ajax
     //Do something
 
@@ -105,6 +105,7 @@ if(isset($_POST['data']) ){
             $stm4->execute();
         }
     }
+
 
 
    }
