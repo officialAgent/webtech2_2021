@@ -2,7 +2,7 @@
 /*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);*/
-
+include('qrcode/qrlib.php');
 ?>
 
 <!doctype html>
@@ -129,8 +129,16 @@ background-size: contain"></div>
                                                 $stm->bindValue(1, $_COOKIE["tcode"]);
                                                 $stm->execute();
                                                 $rows2 = $stm->fetchAll(PDO::FETCH_ASSOC);
-                                                $ttime=$rows2['time'];
-                                                foreach ($rows2 as $row) {
+
+                                                ?>
+
+                                                <input type='hidden' id="testID" value='<?php echo $rows2[0]["testID"]; ?>'>
+
+                                                <?php
+                                                $ttime = $rows2[0]['time'];
+                                                foreach ($rows2
+
+                                                as $row) {
 
                                                 if ($row['questionType'] === "text") {
 
@@ -256,8 +264,6 @@ background-size: contain"></div>
 
                                                                         }
                                                                         if ($row['questionType'] === "draw") {
-
-
                                                                             ?>
                                                                             <div class="row">
                                                                                 <div class="col-md-12">
@@ -265,10 +271,11 @@ background-size: contain"></div>
                                                                                         <h3><?php echo $row['questionPosition'] ?></h3>
                                                                                         <p style="color: #ffffee"><?php echo $row['question'] ?> </p>
                                                                                     </div>
-                                                                                    <p style="color: #ffffee">Mobile Photo</p>
+                                                                                    <p style="color: #ffffee">Mobile
+                                                                                        Photo</p>
                                                                                     <label class="switch">
                                                                                         <input id="<?php echo $row['questionPosition'] ?>"
-                                                                                               onchange="logStatus(this.id)"
+                                                                                               onchange="logStatus(<?php echo $row['questionPosition'] ?>)"
                                                                                                type="checkbox">
                                                                                         <span class="slider round"></span>
                                                                                     </label>
@@ -286,9 +293,10 @@ background-size: contain"></div>
                                                                                                     value="Save picture">
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div style="display: none" id="qrcode.<?php echo $row['questionPosition'] ?>">
+                                                                                    <div style="display: none"
+                                                                                         id="qrcode.<?php echo $row['questionPosition'] ?>">
                                                                                         <?php
-                                                                                        include('qrcode/qrlib.php');
+
 
                                                                                         // SVG file format support
 
@@ -333,15 +341,12 @@ background-size: contain"></div>
                     </div>
                 </div>
 
-
                 <?php
                 if (isset($_GET["1"])) {
 
                     $allPoint = 0;
 
                     foreach ($rows2 as $qp => $row) {
-
-
                         if ($row['questionType'] === "text") {
 
                             $sql = "SELECT * FROM text where questionID=?";
@@ -357,7 +362,7 @@ background-size: contain"></div>
                             $stm->bindValue(1, $row["id"]);
                             $stm->bindValue(2, $_GET[$qp + 1]);
                             $stm->bindValue(3, $_COOKIE["id"]);
-                            $stm->bindValue(4, $_GET[$qp + 1] == $rows3["answer"] ? intval($row["point"]) : 0 );
+                            $stm->bindValue(4, $_GET[$qp + 1] == $rows3["answer"] ? intval($row["point"]) : 0);
                             $stm->execute();
                             //
 
@@ -365,8 +370,6 @@ background-size: contain"></div>
                                 $allPoint++;
 
                             }
-
-
                         }
                         if ($row['questionType'] === "check") {
 
@@ -471,15 +474,14 @@ $masodperc = $datatime['s'];
 <script>
 
 
-
     function logStatus(n) {
         if (document.getElementById(n).checked) {
 
-            document.getElementById('rajz.'+n).style.display = 'none'
-            document.getElementById('qrcode.'+n).style.display = 'block';
+            document.getElementById('rajz.' + n).style.display = 'none'
+            document.getElementById('qrcode.' + n).style.display = 'block';
         } else {
-            document.getElementById('rajz.'+n).style.display = 'block';
-            document.getElementById('qrcode.'+n).style.display = 'none'
+            document.getElementById('rajz.' + n).style.display = 'block';
+            document.getElementById('qrcode.' + n).style.display = 'none'
         }
     }
 
@@ -533,17 +535,46 @@ $masodperc = $datatime['s'];
 </script>
 
 <script>
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
     function checkDragNDrop() {
         var d = document.getElementById("dcount").value;
+
+        let student_answers = {};
 
         let countCorrect = 0;
         alert(d);
         for (var i = 0; i < d; i++) {
+            let size = Object.keys(student_answers).length;
+            student_answers[size+1] = {student_answer1 : document.getElementById('question.' + i).firstChild.nodeValue, student_answer2 : document.getElementById('question.' + i).lastElementChild.innerText};
             if (document.getElementById('question.' + i).firstElementChild === document.getElementById('ans.' + i)) {
                 countCorrect++;
             }
-            alert(countCorrect);
         }
+
+        $.ajax({
+            type: 'POST',
+            url: 'http://147.175.98.97/final/functions/save_drag.php',
+            data: {"data":JSON.stringify(student_answers),"student": getCookie("id"), "testID" : document.getElementById("testID").value},
+            success: function(data){
+                alert(data);
+            }
+        });
+
         document.getElementById("dcount").value = countCorrect;
     }
 </script>
