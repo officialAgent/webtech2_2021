@@ -1,7 +1,7 @@
 <?php
-/*ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);*/
+error_reporting(E_ALL);
 include('qrcode/qrlib.php');
 ?>
 
@@ -44,9 +44,10 @@ include('qrcode/qrlib.php');
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
                 <script>
-                    function logout()
-                    {document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
-
+                    function logout() {
+                        document.cookie.split(";").forEach(function (c) {
+                            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                        });
 
 
                     }</script>
@@ -90,6 +91,23 @@ background-size: contain"></div>
                                 echo "failed connection" . $e->getMessage();
                             }
 
+                            $sql = "SELECT * from studentTest   WHERE testID= ? and studentID=? and status='finsihed'  ";
+
+                            $stm = $conn->prepare($sql);
+
+                            $stm->bindValue(1,$_COOKIE['tcode']);
+                            $stm->bindValue(2,$_COOKIE['id']);
+                            $stm->execute();
+                            $row = $stm->fetch(PDO::FETCH_ASSOC);
+
+                            if (!empty($row)){
+                                echo '<script>window.location="student.php"</script>';
+                            }
+
+
+
+
+
                             $sql = "SELECT * from users WHERE secret= ?  ";
 
                             $stm = $conn->prepare($sql);
@@ -102,7 +120,7 @@ background-size: contain"></div>
                             <h3 class="title"><?php echo $row["fname"];
                                 echo "&nbsp  ";
                                 echo $row["lname"] ?></h3>
-                            <h6>Teacher</h6>
+
                         </div>
                     </div>
                 </div>
@@ -127,6 +145,8 @@ background-size: contain"></div>
                                             <div id="show" style="color: #ffffee" class="controls text-center">
                                                 <?php
 
+                                                $drawing_question_positions = [];
+
                                                 $alldrag = 0;
                                                 $alldrag2 = 0;
                                                 $sql = "SELECT * FROM test JOIN question ON test.id = question.testID where code=?";
@@ -139,7 +159,8 @@ background-size: contain"></div>
 
                                                 ?>
 
-                                                <input type='hidden' id="testID" value='<?php echo $rows2[0]["testID"]; ?>'>
+                                                <input type='hidden' id="testID"
+                                                       value='<?php echo $rows2[0]["testID"]; ?>'>
 
                                                 <?php
                                                 $ttime = $rows2[0]['time'];
@@ -271,6 +292,7 @@ background-size: contain"></div>
 
                                                                         }
                                                                         if ($row['questionType'] === "draw") {
+                                                                            array_push($drawing_question_positions, intval($row['questionPosition']));
                                                                             ?>
                                                                             <div class="row">
                                                                                 <div class="col-md-12">
@@ -287,19 +309,20 @@ background-size: contain"></div>
                                                                                         <span class="slider round"></span>
                                                                                     </label>
                                                                                     <div id="rajz.<?php echo $row['questionPosition'] ?>">
-                                                                                        <canvas id="canvas" width="500"
-                                                                                                height="250"
-                                                                                                style="display: block;">
-                                                                                            Sorry, your browser is
-                                                                                            rubbish.
-                                                                                        </canvas>
+                                                                                        <!--                                                                                        <canvas id="canvas" width="500"-->
+                                                                                        <!--                                                                                                height="250"-->
+                                                                                        <!--                                                                                                style="display: block;">-->
+                                                                                        <!--                                                                                            Sorry, your browser is-->
+                                                                                        <!--                                                                                            rubbish.-->
+                                                                                        <!--                                                                                        </canvas>-->
 
 
                                                                                         <div class="col-md-12"><input
                                                                                                     type="button"
                                                                                                     id="saveC"
                                                                                                     class="btn btn-success btn-send pt-2 btn-block "
-                                                                                                    value="Save picture" onclick="savedrawtodb()">
+                                                                                                    value="Save picture"
+                                                                                                    onclick="savedrawtodb()">
                                                                                         </div>
 
                                                                                     </div>
@@ -313,10 +336,10 @@ background-size: contain"></div>
 
                                                                                         $test = $_COOKIE['tcode'];
                                                                                         $id = $_COOKIE['id'];
-                                                                                        $questionID=$row['id'];
+                                                                                        $questionID = $row['id'];
 
 
-                                                                                        $link="http://147.175.98.97/final/upload/upsite.php?testid=".$test."&"."id=".$id."&row=".$questionID;
+                                                                                        $link = "http://147.175.98.97/final/upload/upsite.php?testid=" . $test . "&" . "id=" . $id . "&row=" . $questionID;
 
 
                                                                                         $svgCode = QRcode::svg($link);
@@ -334,17 +357,44 @@ background-size: contain"></div>
                                                                         ?></div>
                                                                     <input type="hidden" name="dcount" id="dcount"
                                                                            value=<?php echo $alldrag ?>>
+
+                                                                    <?php
+                                                                    if (!empty($drawing_question_positions)) { ?>
+                                                                        <select id="select_position">
+                                                                            <option value="please_select_a_position">
+                                                                                Please select the question you wish to
+                                                                                answer
+                                                                            </option>
+                                                                            <?php
+                                                                            foreach ($drawing_question_positions as $position) {
+                                                                                echo "<option value='$position' onchange=''>$position</option>";
+                                                                            }
+                                                                            ?>
+                                                                        </select>
+                                                                        <canvas id="canvas" width="500"
+                                                                                height="250"
+                                                                                style="display: block;">
+                                                                            Sorry, your browser is
+                                                                            rubbish.
+                                                                        </canvas>
+                                                                        <button type="button" onclick="savePicture()">
+                                                                            Save Picture
+                                                                        </button>
+                                                                        <button type="button" onclick="clearCanvas()">
+                                                                            Clear Canvas
+                                                                        </button>
+                                                                    <?php } ?>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-
                                                         <input type="hidden" name="cdata" id="cdata">
 
-                                                        <div onclick="checkDragNDrop()" class="col-md-12"><input
-                                                                    type="submit" id="save"
-                                                                    class="btn btn-success btn-send pt-2 btn-block "
-                                                                    value="Save test"></div>
+                                                        <div onclick="checkDragNDrop(); " class="col-md-12">
+                                                            <input type="submit" id="save"
+                                                                   class="btn btn-success btn-send pt-2 btn-block "
+                                                                   value="Save test">
+                                                        </div>
                                                     </div>
                                         </form>
                                     </div>
@@ -353,7 +403,55 @@ background-size: contain"></div>
                         </div> <!-- /.row-->
                     </div>
                 </div>
+                <?php
+                date_default_timezone_set('Europe/Vienna');
+                $minfortest = intval($ttime);
 
+                //$currentime=date('h:i:s a');
+
+                $currentdate = date('Y-m-d');
+                $currenth = date('H', time());
+                $currentm = date('i', time());
+                $currentsec = date('s', time());
+
+                $inth = date('H', time() + $minfortest * 60);
+                $intm = date('i', time() + $minfortest * 60);
+                $intsec = date('s', time() + $minfortest * 60);
+                $date = date('Y-m-d', time() + $minfortest * 60);
+
+                $timestamp = date('Y-m-d H:i:s', time() + $minfortest * 60);
+
+                function valami($conn)
+                {
+                    $sql = "SELECT * FROM timer WHERE student_id=? and test_id=?";
+                    $stm = $conn->prepare($sql);
+                    $stm->bindValue(1, $_COOKIE['id']);
+                    $stm->bindValue(2, intval($_COOKIE['tcode']));
+                    $stm->execute();
+                    $temp = $stm->fetch();
+                    return $temp;
+                }
+
+                $datatime = valami($conn);
+                if (empty($datatime)) {
+                    $sql = "INSERT INTO timer (date,h,m,s,student_id,test_id,fulltime ) VALUES (?,?,?,?,?,?,?)";
+                    $stm = $conn->prepare($sql);
+                    $stm->bindValue(1, $date);
+                    $stm->bindValue(2, $inth);
+                    $stm->bindValue(3, $intm);
+                    $stm->bindValue(4, $intsec);
+                    $stm->bindValue(5, $_COOKIE['id']);
+                    $stm->bindValue(6, intval($_COOKIE['tcode']));
+                    $stm->bindValue(7, $timestamp);
+                    $stm->execute();
+
+                    $datatime = valami($conn);
+                }
+
+                $ora = $datatime['h'];
+                $perc = $datatime['m'];
+                $masodperc = $datatime['s'];
+                ?>
                 <?php
                 if (isset($_GET["1"])) {
 
@@ -380,7 +478,7 @@ background-size: contain"></div>
                             //
 
                             if ($rows3["answer"] == $_GET[$qp + 1]) {
-                                $allPoint=$allPoint+$row['point'];
+                                $allPoint = $allPoint + $row['point'];
 
                             }
                         }
@@ -394,8 +492,12 @@ background-size: contain"></div>
                             $stm->execute();
                             $rows4 = $stm->fetchAll(PDO::FETCH_ASSOC);
 
+                            $arany=$stm->rowCount();
+                            $onepoint=$row["point"]/$arany;
+
+
                             foreach ($rows4 as $chbox) {
-                                $checkpoint=0;
+                                $checkpoint = 0;
 
                                 $new_str = str_replace(' ', '', $chbox['answer']);
 
@@ -408,21 +510,39 @@ background-size: contain"></div>
 
                                 if ($chbox["checked"] == $t) {
                                     $checkpoint++;
-                                    $allPoint++; // Solve real points problem
+                                    $allPoint=$allPoint+$onepoint; // Solve real points problem
                                 }
 
                                 $stm = $conn->prepare("INSERT INTO checkbox_student_answers (checkboxID, studentID, student_ans,points) VALUES (?,?,?,?)");
                                 $stm->bindValue(1, $chbox["id"]);
                                 $stm->bindValue(2, $_COOKIE["id"]);
                                 $stm->bindValue(3, $t);
-                                $stm->bindValue(4,$checkpoint);
+                                $stm->bindValue(4, $checkpoint);
                                 $stm->execute();
 
 
                             }
                         }
+                        if ($row['questionType'] === "drag") {
+                            $sql = "SELECT * FROM drag where questionID=?";
+
+                            $stm = $conn->prepare($sql);
+
+                            $stm->bindValue(1, $row["id"]);
+                            $stm->execute();
+                            $rows5 = $stm->fetchAll(PDO::FETCH_ASSOC);
+                            $arany=$stm->rowCount();
+                            $onepoint=$row["point"]/$arany;
+                            $alldragpoint=$_GET['dcount']*$onepoint;
+
+                            $allPoint=$allPoint+$alldragpoint;
+
+
+                        }
                     }
-                    $allPoint = $allPoint + $_GET['dcount'];
+
+
+
                     $sql = "UPDATE studentTest set status='finsihed' where studentID=? and testID=?";
                     $stm = $conn->prepare($sql);
                     $stm->bindValue(1, $_COOKIE["id"]);
@@ -430,14 +550,20 @@ background-size: contain"></div>
                     $stm->execute();
 
 
-                    $sql = "DELETE from timer  where studentID=? and testID=?";
+                    $sql = "DELETE from timer  where student_id='{$_COOKIE["id"]}' and test_id=?";
                     $stm = $conn->prepare($sql);
-                    $stm->bindValue(1, $_COOKIE["id"]);
-                    $stm->bindValue(2, $_COOKIE["tcode"]);
+                    $stm->bindValue(1,intval($_COOKIE["tcode"]) );
                     $stm->execute();
 
-                   
+                    $sql = "UPDATE studentTest set point=? where studentID=? and testID=?";
+                    $stm = $conn->prepare($sql);
+                    $stm->bindValue(1, $allPoint);
+                    $stm->bindValue(2, $_COOKIE["id"]);
+                    $stm->bindValue(3, $_COOKIE["tcode"]);
+                    $stm->execute();
 
+
+                    echo "<script>window.location.replace('student.php')</script>";
 
                 }
                 ?>
@@ -455,56 +581,51 @@ background-size: contain"></div>
 background-size: contain" class="footer text-center ">
 </footer>
 
-<?php
-date_default_timezone_set('Europe/Vienna');
-$minfortest = intval($ttime);
 
-//$currentime=date('h:i:s a');
+<script>
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
 
-$currentdate = date('Y-m-d');
-$currenth = date('H', time());
-$currentm = date('i', time());
-$currentsec = date('s', time());
+    function clearCanvas() {
+        var canvas = document.getElementById('canvas'),
+            ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
-$inth = date('H', time() + $minfortest * 60);
-$intm = date('i', time() + $minfortest * 60);
-$intsec = date('s', time() + $minfortest * 60);
-$date = date('Y-m-d', time() + $minfortest * 60);
+    function savePicture() {
+        let position = document.getElementById("select_position").value;
 
-$timestamp = date('Y-m-d H:i:s', time() + $minfortest * 60);
+        if (position !== 'please_select_a_position') {
+            let canvasData = canvas.toDataURL();
 
-function valami($conn)
-{
-    $sql = "SELECT * FROM timer WHERE student_id=? and test_id=?";
-    $stm = $conn->prepare($sql);
-    $stm->bindValue(1, $_COOKIE['id']);
-    $stm->bindValue(2, intval($_COOKIE['tcode']));
-    $stm->execute();
-    $temp = $stm->fetch();
-    return $temp;
-}
-
-$datatime = valami($conn);
-if (empty($datatime)) {
-    $sql = "INSERT INTO timer (date,h,m,s,student_id,test_id,fulltime ) VALUES (?,?,?,?,?,?,?)";
-    $stm = $conn->prepare($sql);
-    $stm->bindValue(1, $date);
-    $stm->bindValue(2, $inth);
-    $stm->bindValue(3, $intm);
-    $stm->bindValue(4, $intsec);
-    $stm->bindValue(5, $_COOKIE['id']);
-    $stm->bindValue(6, intval($_COOKIE['tcode']));
-    $stm->bindValue(7, $timestamp);
-    $stm->execute();
-
-    $datatime = valami($conn);
-}
-
-$ora = $datatime['h'];
-$perc = $datatime['m'];
-$masodperc = $datatime['s'];
-?>
-
+            $.ajax({
+                type: 'POST',
+                url: 'http://147.175.98.97/final/functions/save_pic.php',
+                data: {
+                    "picture": canvasData,
+                    "position": position,
+                    "studentID": getCookie("id"),
+                    "testCode": getCookie("tcode")
+                },
+                success: function (data) {
+                }
+            });
+        }
+    }
+</script>
 
 <script>
 
@@ -541,9 +662,7 @@ $masodperc = $datatime['s'];
 // If the count down is over, write some text
         if (distance < 0) {
             clearInterval(x);
-           // document.getElementById("demo").innerHTML = "EXPIRED";
-
-
+            // document.getElementById("demo").innerHTML = "EXPIRED";
 
 
             $.ajax({
@@ -551,15 +670,11 @@ $masodperc = $datatime['s'];
                 url: 'http://147.175.98.97/final/functions/mangetesttime.php',
 
             });
-            document.getElementById("demo").innerHTML="Time is up-You will be redirected after 5sec"
-            setTimeout(function ()
-            {
+            document.getElementById("save").click();
+            document.getElementById("demo").innerHTML = "Time is up-You will be redirected after 5sec"
 
-                window.location.replace("student.php");
-            },5000);
         }
     }, 1000);
-
 
 
 </script>
@@ -585,7 +700,7 @@ $masodperc = $datatime['s'];
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
+        for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0) == ' ') {
                 c = c.substring(1);
@@ -601,41 +716,51 @@ $masodperc = $datatime['s'];
         var d = document.getElementById("dcount").value;
 
         let student_answers = {};
-        let dragpoint=0;
+        let dragpoint = 0;
         let countCorrect = 0;
-        alert(d);
+        // alert(d);
         for (var i = 0; i < d; i++) {
             let size = Object.keys(student_answers).length;
 
 
             if (document.getElementById('question.' + i).firstElementChild === document.getElementById('ans.' + i)) {
                 countCorrect++;
-                dragpoint=1;
+                dragpoint = 1;
+            } else {
+                dragpoint = 0;
             }
-            else {
-                dragpoint=0;
-            }
-            student_answers[size+1] = {student_answer1 : document.getElementById('question.' + i).firstChild.nodeValue, student_answer2 : document.getElementById('question.' + i).lastElementChild.innerText,point:dragpoint};
-
-
+            student_answers[size + 1] = {
+                student_answer1: document.getElementById('question.' + i).firstChild.nodeValue,
+                student_answer2: document.getElementById('question.' + i).lastElementChild.innerText,
+                point: dragpoint
+            };
         }
 
         $.ajax({
             type: 'POST',
             url: 'http://147.175.98.97/final/functions/save_drag.php',
-            data: {"data":JSON.stringify(student_answers),"student": getCookie("id"), "testID" : document.getElementById("testID").value},
-            success: function(data){
-                alert(data);
+            data: {
+                "data": JSON.stringify(student_answers),
+                "student": getCookie("id"),
+                "testID": document.getElementById("testID").value
+            },
+            success: function (data) {
+
             }
         });
 
         document.getElementById("dcount").value = countCorrect;
     }
+
+    function redirect() {
+        // window.location.replace("http://147.175.98.97/final/student.php");
+        window.location.href = "http://147.175.98.97/final/student.php";
+    }
 </script>
 
 <script>
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
+    let canvas = document.getElementById('canvas');
+    let context = canvas.getContext('2d');
 
     var radius = 2;  //不要犯蠢，第一次竟然打成0，根本就不會有東西跑出來啊
     var start = 0; //起始點
@@ -672,11 +797,6 @@ $masodperc = $datatime['s'];
     canvas.addEventListener('mousedown', engage);
     canvas.addEventListener('mousemove', putPoint);//當有人在canvas上mousedown時觸發putPoint
     canvas.addEventListener('mouseup', disengage);
-
-    document.getElementById('saveC').addEventListener('click', function () {
-        var canvasData = canvas.toDataURL();
-        document.getElementById('cdata').value = canvasData;
-    })
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -764,13 +884,5 @@ $masodperc = $datatime['s'];
         });
     }
 </script>
-<script>
-function savedrawtodb()
-{
-    let canvasdata=canvas.toDataURL("image/png");
-    alert(canvasdata);
-}
-</script>
-
 </body>
 </html>

@@ -90,13 +90,16 @@ background-size: contain"></div>
                             } catch (PDOException $e) {
                                 echo "failed connection" . $e->getMessage();
                             }
-                            $sql = "SELECT * from users    WHERE secret= ?  ";
+                            $sql = "SELECT * from users    WHERE secret= ? and role =2";
 
                             $stm = $conn->prepare($sql);
 
                             $stm->bindValue(1,$_COOKIE["id"]);
                             $stm->execute();
                             $row = $stm->fetch(PDO::FETCH_ASSOC);
+                            if (empty($row)){
+                                echo "<script>window.location.replace('index.php')</script>";
+                            }
                             ?>
                             <h3 class="title"><?php echo $row["fname"];echo "&nbsp  ";echo $row["lname"]    ?></h3>
                             <h6>Teacher</h6>

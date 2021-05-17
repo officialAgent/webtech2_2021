@@ -116,18 +116,19 @@ if ($uploadOk == 0) {
 }
 include("config.php");
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=images", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=final", $username, $password);
 } catch (PDOException $e) {
-    echo "Connection to $dbname failed : " . $e->getMessage();
+    echo "failed connection" . $e->getMessage();
+    echo $servername;
 }
 
-$sql = "INSERT INTO images (test_id,user_id,link,row_id ) VALUES (?,?,?,?)";
-$stm = $conn->prepare($sql);
-$stm->bindValue(1, $_GET['testid']);
-$stm->bindValue(2, $_GET['id']);
-$stm->bindValue(3, $target_file);
-$stm->bindValue(4, $_GET['row']);
-
+$stm = $conn->prepare("INSERT INTO draw (question_id, student_id, image, link, point, testCode) VALUES (?, ?, ?, ?, ?, ?)");
+$stm->bindValue(1, intval($_GET["row"]));
+$stm->bindValue(2, $_GET["id"]);
+$stm->bindValue(3, NULL);
+$stm->bindValue(4, (!empty($target_file)) ? $target_file :NULL);
+$stm->bindValue(5, 0);
+$stm->bindValue(6,intval($_GET["testid"]));
 $stm->execute();
 
 
