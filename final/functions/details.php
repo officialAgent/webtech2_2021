@@ -170,12 +170,7 @@ background-size: contain"></div>
                     <div class="row  justify-content-center">
                         <div id="cheat" class="form__group field">
                             <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <button onclick="csv()">Download csv</button>
-                                    </div>
 
-                                </div>
                                 <div class="row"  style="margin-top: 50px;">
                                     <div class="col-md-12 text-center">
                                         <div class="outer-form">
@@ -327,21 +322,6 @@ background-size: contain" class="footer text-center ">
         })
     },3000);
 
-    function csv(){
-        alert("dgfg");
-        $.ajax({
-            type: 'GET',
-            url: 'http://147.175.98.97/final/functions/csv.php',
-            data: {"data":document.getElementById('tcode').innerHTML},
-            success: function(data){
-                alert(data);
-
-            }
-
-
-        });
-
-    }
 
 
 </script>
