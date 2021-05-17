@@ -92,7 +92,7 @@ if (isset($_GET['examID']) && !empty($_GET['examID'])){
 <nav class="navbar navbar-color-on-scroll navbar-transparent    fixed-top  navbar-expand-lg "  color-on-scroll="100"  id="sectionsNav">
     <div class="container">
         <div class="navbar-translate">
-            <a class="navbar-brand" href="https://demos.creative-tim.com/material-kit/index.html" target="_blank">Profile </a>
+            <a class="navbar-brand" href="http://147.175.98.97/final/index.php" target="_blank">Profile </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 <span class="navbar-toggler-icon"></span>

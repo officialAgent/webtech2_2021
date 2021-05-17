@@ -33,7 +33,7 @@ include('qrcode/qrlib.php');
      id="sectionsNav">
     <div class="container">
         <div class="navbar-translate">
-            <a class="navbar-brand" href="https://demos.creative-tim.com/material-kit/index.html" target="_blank">Profile </a>
+            <a class="navbar-brand" href="" target="_blank">Profile </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
                     aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -43,19 +43,8 @@ include('qrcode/qrlib.php');
         </div>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
-                <script>
-                    function logout() {
-                        document.cookie.split(";").forEach(function (c) {
-                            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-                        });
 
 
-                    }</script>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php" onclick="logout()">
-                        <i class="material-icons">logout</i>Logout
-                    </a>
-                </li>
             </ul>
         </div>
     </div>
