@@ -107,6 +107,8 @@ if ($uploadOk == 0) {
 
 } else {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+
+
         $message = "The file " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " has been uploaded.";
 
 
@@ -122,14 +124,28 @@ try {
     echo $servername;
 }
 
-$stm = $conn->prepare("INSERT INTO draw (question_id, student_id, image, link, point, testCode) VALUES (?, ?, ?, ?, ?, ?)");
-$stm->bindValue(1, intval($_GET["row"]));
-$stm->bindValue(2, $_GET["id"]);
-$stm->bindValue(3, NULL);
-$stm->bindValue(4, (!empty($target_file)) ? $target_file :NULL);
-$stm->bindValue(5, 0);
-$stm->bindValue(6,intval($_GET["testid"]));
+
+$sql = "SELECT * from draw WHERE testCode= ? and question_id=? ";
+
+$stm = $conn->prepare($sql);
+
+$stm->bindValue(1,intval($_GET["testid"]));
+$stm->bindValue(2,intval($_GET["row"]));
 $stm->execute();
+$row = $stm->fetch(PDO::FETCH_ASSOC);
+
+if (empty($row)){
+    $stm = $conn->prepare("INSERT INTO draw (question_id, student_id, image, link,  testCode) VALUES (?, ?, ?, ?, ?)");
+    $stm->bindValue(1, intval($_GET["row"]));
+    $stm->bindValue(2, $_GET["id"]);
+    $stm->bindValue(3, NULL);
+    $stm->bindValue(4, (!empty($target_file)) ? $target_file :NULL);
+    $stm->bindValue(5,intval($_GET["testid"]));
+    $stm->execute();
+
+}
+
+
 
 
 ?>

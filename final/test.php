@@ -189,7 +189,7 @@ background-size: contain"></div>
                                                                         id=<?php echo $row['questionPosition'] ?> name=<?php echo $row['questionPosition'] ?>
                                                                         type="text" class="form-control"
                                                                         placeholder="Please enter your ans "
-                                                                        required="required" data-error="PLS fill out">
+                                                                         data-error="PLS fill out">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -386,15 +386,16 @@ background-size: contain"></div>
                                                                     <?php } ?>
                                                                 </div>
                                                             </div>
+
+                                                            <div onclick="checkDragNDrop(); " class="col-md-12">
+                                                                <input type="submit" id="save"
+                                                                       class="btn btn-success btn-send pt-2 btn-block "
+                                                                       value="Save test">
+                                                            </div>
                                                         </div>
 
                                                         <input type="hidden" name="cdata" id="cdata">
 
-                                                        <div onclick="checkDragNDrop(); " class="col-md-12">
-                                                            <input type="submit" id="save"
-                                                                   class="btn btn-success btn-send pt-2 btn-block "
-                                                                   value="Save test">
-                                                        </div>
                                                     </div>
                                         </form>
                                     </div>
@@ -453,7 +454,9 @@ background-size: contain"></div>
                 $masodperc = $datatime['s'];
                 ?>
                 <?php
-                if (isset($_GET["1"])) {
+                if (isset($_GET["dcount"])) {
+
+
 
                     $allPoint = 0;
 
@@ -715,41 +718,51 @@ background-size: contain" class="footer text-center ">
     function checkDragNDrop() {
         var d = document.getElementById("dcount").value;
 
-        let student_answers = {};
-        let dragpoint = 0;
-        let countCorrect = 0;
-        // alert(d);
-        for (var i = 0; i < d; i++) {
-            let size = Object.keys(student_answers).length;
+
+ if(d != 0){
+
+     let student_answers = {};
+     let dragpoint = 0;
+     let countCorrect = 0;
+     // alert(d);
+     for (var i = 0; i < d; i++) {
+         let size = Object.keys(student_answers).length;
 
 
-            if (document.getElementById('question.' + i).firstElementChild === document.getElementById('ans.' + i)) {
-                countCorrect++;
-                dragpoint = 1;
-            } else {
-                dragpoint = 0;
-            }
-            student_answers[size + 1] = {
-                student_answer1: document.getElementById('question.' + i).firstChild.nodeValue,
-                student_answer2: document.getElementById('question.' + i).lastElementChild.innerText,
-                point: dragpoint
-            };
-        }
+         if (document.getElementById('question.' + i).firstElementChild === document.getElementById('ans.' + i)) {
+             countCorrect++;
+             dragpoint = 1;
+         } else {
+             dragpoint = 0;
+         }
+         student_answers[size + 1] = {
+             student_answer1: document.getElementById('question.' + i).firstChild.nodeValue,
+             student_answer2: document.getElementById('question.' + i).lastElementChild.innerText,
+             point: dragpoint
+         };
+     }
 
-        $.ajax({
-            type: 'POST',
-            url: 'http://147.175.98.97/final/functions/save_drag.php',
-            data: {
-                "data": JSON.stringify(student_answers),
-                "student": getCookie("id"),
-                "testID": document.getElementById("testID").value
-            },
-            success: function (data) {
+     $.ajax({
+         type: 'POST',
+         url: 'http://147.175.98.97/final/functions/save_drag.php',
+         data: {
+             "data": JSON.stringify(student_answers),
+             "student": getCookie("id"),
+             "testID": document.getElementById("testID").value
+         },
+         success: function (data) {
 
-            }
-        });
+         }
+     });
 
-        document.getElementById("dcount").value = countCorrect;
+     document.getElementById("dcount").value = countCorrect;
+
+
+ }
+ else {
+     document.getElementById("save").click();
+ }
+
     }
 
     function redirect() {

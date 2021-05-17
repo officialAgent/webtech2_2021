@@ -151,6 +151,14 @@ background-size: contain"></div>
                             if (empty($row)){
                                 echo "<script>window.location.replace('index.php')</script>";
                             }
+
+                            if(preg_match('/(Chrome|CriOS)\//i',$_SERVER['HTTP_USER_AGENT'])
+                                && !preg_match('/(Aviator|ChromePlus|coc_|Dragon|Edge|Flock|Iron|Kinza|Maxthon|MxNitro|Nichrome|OPR|Perk|Rockmelt|Seznam|Sleipnir|Spark|UBrowser|Vivaldi|WebExplorer|YaBrowser)/i',$_SERVER['HTTP_USER_AGENT'])){
+                                // Browser might be Google Chrome
+                            }
+                            else{
+                                echo "<script>alert('Use Google Chrome on Windows because your browser is not fully supported')</script>";
+                            }
                             ?>
                             <h3 class="title"><?php echo $row["fname"];echo "&nbsp  ";echo $row["lname"]    ?></h3>
                             <h6>Student</h6>
@@ -212,6 +220,65 @@ background-size: contain"></div>
                 </div>
                 <div class="tab-pane text-center gallery" id="works">
                     <div class="row">
+
+                        <div class="container">
+                            <div class="row"  style="margin-top: 50px;">
+                                <div class="col-md-12 text-center">
+                                    <div class="outer-form">
+                                        <table class="table-striped table table-bordered vertical">
+                                            <thead style="color: white; font-weight: normal; background-color: black;" >
+                                            <tr>
+                                                <th  style="color: orangered"  class="head">Test Code.</th>
+                                                <th   style="color: orangered" class="head">Points</th>
+                                                <th   style="color: orangered" class="head">Details</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody class="text-center" style="border:1px solid transparent; background-color:#242424; color:#A1A6AB; text-align: left;">
+
+
+
+                                            <?php
+
+
+                                            $sql = "SELECT  * from studentTest where studentID=?";
+
+                                            $stm = $conn->prepare($sql);
+
+                                            $stm->bindValue(1,$_COOKIE["id"]);
+                                            $stm->execute();
+                                            $rows2 = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+
+                                            foreach ($rows2 as $key=> $row) {
+
+                                                ?>
+
+
+                                                <tr>
+
+                                                    <td><?php echo $row["testID"] ?></td>
+
+
+                                                    <td><?php echo $row["point"] ?></td>
+
+
+                                                    <td>
+                                                        <a href="http://147.175.98.97/final/functions/review.php?studentID=<?php echo $_COOKIE['id']?>&testID=<?php echo $row["testID"] ?>">Details</a>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
 
                     </div>
                 </div>
